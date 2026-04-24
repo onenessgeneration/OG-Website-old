@@ -9,15 +9,40 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WallpapersRouteImport } from './routes/wallpapers'
+import { Route as SummerCampRouteImport } from './routes/summer-camp'
 import { Route as SoulSyncRouteImport } from './routes/soul-sync'
+import { Route as SfzRouteImport } from './routes/sfz'
 import { Route as SereneMindRouteImport } from './routes/serene-mind'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProgramsRouteImport } from './routes/programs'
 import { Route as OnenessYogaRouteImport } from './routes/oneness-yoga'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as GetInvolvedRouteImport } from './routes/get-involved'
+import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as ContactUsRouteImport } from './routes/contact-us'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WallpapersRoute = WallpapersRouteImport.update({
+  id: '/wallpapers',
+  path: '/wallpapers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SummerCampRoute = SummerCampRouteImport.update({
+  id: '/summer-camp',
+  path: '/summer-camp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SoulSyncRoute = SoulSyncRouteImport.update({
   id: '/soul-sync',
   path: '/soul-sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SfzRoute = SfzRouteImport.update({
+  id: '/sfz',
+  path: '/sfz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SereneMindRoute = SereneMindRouteImport.update({
@@ -25,9 +50,44 @@ const SereneMindRoute = SereneMindRouteImport.update({
   path: '/serene-mind',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsRoute = ProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnenessYogaRoute = OnenessYogaRouteImport.update({
   id: '/oneness-yoga',
   path: '/oneness-yoga',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GetInvolvedRoute = GetInvolvedRouteImport.update({
+  id: '/get-involved',
+  path: '/get-involved',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactUsRoute = ContactUsRouteImport.update({
+  id: '/contact-us',
+  path: '/contact-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutUsRoute = AboutUsRouteImport.update({
@@ -44,54 +104,155 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/blog': typeof BlogRoute
+  '/contact-us': typeof ContactUsRoute
+  '/gallery': typeof GalleryRoute
+  '/get-involved': typeof GetInvolvedRoute
+  '/login': typeof LoginRoute
   '/oneness-yoga': typeof OnenessYogaRoute
+  '/programs': typeof ProgramsRoute
+  '/register': typeof RegisterRoute
   '/serene-mind': typeof SereneMindRoute
+  '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
+  '/summer-camp': typeof SummerCampRoute
+  '/wallpapers': typeof WallpapersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/blog': typeof BlogRoute
+  '/contact-us': typeof ContactUsRoute
+  '/gallery': typeof GalleryRoute
+  '/get-involved': typeof GetInvolvedRoute
+  '/login': typeof LoginRoute
   '/oneness-yoga': typeof OnenessYogaRoute
+  '/programs': typeof ProgramsRoute
+  '/register': typeof RegisterRoute
   '/serene-mind': typeof SereneMindRoute
+  '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
+  '/summer-camp': typeof SummerCampRoute
+  '/wallpapers': typeof WallpapersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/blog': typeof BlogRoute
+  '/contact-us': typeof ContactUsRoute
+  '/gallery': typeof GalleryRoute
+  '/get-involved': typeof GetInvolvedRoute
+  '/login': typeof LoginRoute
   '/oneness-yoga': typeof OnenessYogaRoute
+  '/programs': typeof ProgramsRoute
+  '/register': typeof RegisterRoute
   '/serene-mind': typeof SereneMindRoute
+  '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
+  '/summer-camp': typeof SummerCampRoute
+  '/wallpapers': typeof WallpapersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about-us' | '/oneness-yoga' | '/serene-mind' | '/soul-sync'
+  fullPaths:
+    | '/'
+    | '/about-us'
+    | '/blog'
+    | '/contact-us'
+    | '/gallery'
+    | '/get-involved'
+    | '/login'
+    | '/oneness-yoga'
+    | '/programs'
+    | '/register'
+    | '/serene-mind'
+    | '/sfz'
+    | '/soul-sync'
+    | '/summer-camp'
+    | '/wallpapers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about-us' | '/oneness-yoga' | '/serene-mind' | '/soul-sync'
+  to:
+    | '/'
+    | '/about-us'
+    | '/blog'
+    | '/contact-us'
+    | '/gallery'
+    | '/get-involved'
+    | '/login'
+    | '/oneness-yoga'
+    | '/programs'
+    | '/register'
+    | '/serene-mind'
+    | '/sfz'
+    | '/soul-sync'
+    | '/summer-camp'
+    | '/wallpapers'
   id:
     | '__root__'
     | '/'
     | '/about-us'
+    | '/blog'
+    | '/contact-us'
+    | '/gallery'
+    | '/get-involved'
+    | '/login'
     | '/oneness-yoga'
+    | '/programs'
+    | '/register'
     | '/serene-mind'
+    | '/sfz'
     | '/soul-sync'
+    | '/summer-camp'
+    | '/wallpapers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutUsRoute: typeof AboutUsRoute
+  BlogRoute: typeof BlogRoute
+  ContactUsRoute: typeof ContactUsRoute
+  GalleryRoute: typeof GalleryRoute
+  GetInvolvedRoute: typeof GetInvolvedRoute
+  LoginRoute: typeof LoginRoute
   OnenessYogaRoute: typeof OnenessYogaRoute
+  ProgramsRoute: typeof ProgramsRoute
+  RegisterRoute: typeof RegisterRoute
   SereneMindRoute: typeof SereneMindRoute
+  SfzRoute: typeof SfzRoute
   SoulSyncRoute: typeof SoulSyncRoute
+  SummerCampRoute: typeof SummerCampRoute
+  WallpapersRoute: typeof WallpapersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wallpapers': {
+      id: '/wallpapers'
+      path: '/wallpapers'
+      fullPath: '/wallpapers'
+      preLoaderRoute: typeof WallpapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/summer-camp': {
+      id: '/summer-camp'
+      path: '/summer-camp'
+      fullPath: '/summer-camp'
+      preLoaderRoute: typeof SummerCampRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/soul-sync': {
       id: '/soul-sync'
       path: '/soul-sync'
       fullPath: '/soul-sync'
       preLoaderRoute: typeof SoulSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sfz': {
+      id: '/sfz'
+      path: '/sfz'
+      fullPath: '/sfz'
+      preLoaderRoute: typeof SfzRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/serene-mind': {
@@ -101,11 +262,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SereneMindRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs': {
+      id: '/programs'
+      path: '/programs'
+      fullPath: '/programs'
+      preLoaderRoute: typeof ProgramsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/oneness-yoga': {
       id: '/oneness-yoga'
       path: '/oneness-yoga'
       fullPath: '/oneness-yoga'
       preLoaderRoute: typeof OnenessYogaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/get-involved': {
+      id: '/get-involved'
+      path: '/get-involved'
+      fullPath: '/get-involved'
+      preLoaderRoute: typeof GetInvolvedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-us': {
+      id: '/contact-us'
+      path: '/contact-us'
+      fullPath: '/contact-us'
+      preLoaderRoute: typeof ContactUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about-us': {
@@ -128,9 +338,19 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutUsRoute: AboutUsRoute,
+  BlogRoute: BlogRoute,
+  ContactUsRoute: ContactUsRoute,
+  GalleryRoute: GalleryRoute,
+  GetInvolvedRoute: GetInvolvedRoute,
+  LoginRoute: LoginRoute,
   OnenessYogaRoute: OnenessYogaRoute,
+  ProgramsRoute: ProgramsRoute,
+  RegisterRoute: RegisterRoute,
   SereneMindRoute: SereneMindRoute,
+  SfzRoute: SfzRoute,
   SoulSyncRoute: SoulSyncRoute,
+  SummerCampRoute: SummerCampRoute,
+  WallpapersRoute: WallpapersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
