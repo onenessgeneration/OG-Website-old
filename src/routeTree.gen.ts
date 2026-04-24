@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SoulSyncRouteImport } from './routes/soul-sync'
+import { Route as SereneMindRouteImport } from './routes/serene-mind'
+import { Route as OnenessYogaRouteImport } from './routes/oneness-yoga'
+import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SoulSyncRoute = SoulSyncRouteImport.update({
+  id: '/soul-sync',
+  path: '/soul-sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SereneMindRoute = SereneMindRouteImport.update({
+  id: '/serene-mind',
+  path: '/serene-mind',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnenessYogaRoute = OnenessYogaRouteImport.update({
+  id: '/oneness-yoga',
+  path: '/oneness-yoga',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutUsRoute = AboutUsRouteImport.update({
+  id: '/about-us',
+  path: '/about-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,78 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/oneness-yoga': typeof OnenessYogaRoute
+  '/serene-mind': typeof SereneMindRoute
+  '/soul-sync': typeof SoulSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/oneness-yoga': typeof OnenessYogaRoute
+  '/serene-mind': typeof SereneMindRoute
+  '/soul-sync': typeof SoulSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/oneness-yoga': typeof OnenessYogaRoute
+  '/serene-mind': typeof SereneMindRoute
+  '/soul-sync': typeof SoulSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/about-us' | '/oneness-yoga' | '/serene-mind' | '/soul-sync'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/about-us' | '/oneness-yoga' | '/serene-mind' | '/soul-sync'
+  id:
+    | '__root__'
+    | '/'
+    | '/about-us'
+    | '/oneness-yoga'
+    | '/serene-mind'
+    | '/soul-sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutUsRoute: typeof AboutUsRoute
+  OnenessYogaRoute: typeof OnenessYogaRoute
+  SereneMindRoute: typeof SereneMindRoute
+  SoulSyncRoute: typeof SoulSyncRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/soul-sync': {
+      id: '/soul-sync'
+      path: '/soul-sync'
+      fullPath: '/soul-sync'
+      preLoaderRoute: typeof SoulSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/serene-mind': {
+      id: '/serene-mind'
+      path: '/serene-mind'
+      fullPath: '/serene-mind'
+      preLoaderRoute: typeof SereneMindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oneness-yoga': {
+      id: '/oneness-yoga'
+      path: '/oneness-yoga'
+      fullPath: '/oneness-yoga'
+      preLoaderRoute: typeof OnenessYogaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about-us': {
+      id: '/about-us'
+      path: '/about-us'
+      fullPath: '/about-us'
+      preLoaderRoute: typeof AboutUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +127,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutUsRoute: AboutUsRoute,
+  OnenessYogaRoute: OnenessYogaRoute,
+  SereneMindRoute: SereneMindRoute,
+  SoulSyncRoute: SoulSyncRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
