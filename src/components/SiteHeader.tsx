@@ -1,94 +1,139 @@
 import { Link } from "@tanstack/react-router";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
 
 const resourceLinks = [
   { to: "/soul-sync", label: "Soul Sync" },
   { to: "/serene-mind", label: "Serene Mind" },
   { to: "/oneness-yoga", label: "Oneness Yoga" },
-  { to: "/blog", label: "Blog" },
+  { to: "/blog", label: "Blogs" },
   { to: "/gallery", label: "Gallery" },
   { to: "/wallpapers", label: "Wallpapers" },
 ] as const;
 
 const programLinks = [
-  { to: "/sfz", label: "SFZ" },
-  { to: "/summer-camp", label: "Summer Camp" },
-  { to: "/programs", label: "All Programs" },
+  { to: "/sfz", label: "Stress Free Zone" },
+  { to: "/summer-camp", label: "Summer Camp Events" },
+  { to: "/programs", label: "Events" },
 ] as const;
+
+function BrandMark() {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="relative h-11 w-11 text-foreground">
+        <div className="absolute left-1/2 top-1 h-4 w-7 -translate-x-1/2 rounded-full border-2 border-current" />
+        <div className="absolute left-1/2 top-3.5 h-4 w-7 -translate-x-1/2 rounded-full border-2 border-current" />
+        <div className="absolute left-1/2 top-6.5 h-0.5 w-0.5 -translate-x-1/2 rounded-full bg-current" />
+      </div>
+      <div className="leading-none text-[0.72rem] font-semibold uppercase tracking-[0.02em] text-foreground">
+        <div>Oneness</div>
+        <div>Generation</div>
+      </div>
+    </div>
+  );
+}
+
+function DesktopDropdown({
+  label,
+  items,
+}: {
+  label: string;
+  items: readonly { to: string; label: string }[];
+}) {
+  return (
+    <div className="group relative">
+      <button className="flex items-center gap-2 text-[1rem] font-semibold text-primary transition hover:opacity-80">
+        <span>{label}</span>
+        <ChevronDown className="h-5 w-5 text-foreground" />
+      </button>
+      <div className="pointer-events-none absolute left-0 top-full pt-4 opacity-0 transition duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+        <div className="min-w-[340px] rounded-2xl border border-border bg-card p-6 shadow-card">
+          <div className="space-y-5">
+            {items.map((item) => (
+              <Link key={item.to} to={item.to} className="block text-[1rem] font-semibold text-primary transition hover:opacity-80">
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-display text-xl font-bold text-primary">
-          <span className="w-8 h-8 rounded-full bg-hero-gradient flex items-center justify-center text-primary-foreground text-sm">
-            ॐ
-          </span>
-          Oneness Generation
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-soft backdrop-blur-sm">
+      <div className="container-shell flex h-26 items-center justify-between gap-6 px-4 sm:px-6">
+        <Link to="/" className="shrink-0">
+          <BrandMark />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
-          <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "text-primary" }} className="hover:text-primary transition">Home</Link>
-          <Link to="/about-us" activeProps={{ className: "text-primary" }} className="hover:text-primary transition">About Us</Link>
-
-          <div className="relative group">
-            <button className="hover:text-primary transition">Resources ▾</button>
-            <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
-              <div className="bg-card shadow-soft rounded-lg p-2 min-w-44 border border-border">
-                {resourceLinks.map((l) => (
-                  <Link key={l.to} to={l.to} className="block px-3 py-2 rounded hover:bg-secondary text-foreground">
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="relative group">
-            <button className="hover:text-primary transition">Programs ▾</button>
-            <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
-              <div className="bg-card shadow-soft rounded-lg p-2 min-w-44 border border-border">
-                {programLinks.map((l) => (
-                  <Link key={l.to} to={l.to} className="block px-3 py-2 rounded hover:bg-secondary text-foreground">
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <Link to="/get-involved" activeProps={{ className: "text-primary" }} className="hover:text-primary transition">Get Involved</Link>
-          <Link to="/contact-us" activeProps={{ className: "text-primary" }} className="hover:text-primary transition">Contact</Link>
-
-          <Link to="/login" className="px-4 py-2 rounded-full bg-primary text-primary-foreground hover:bg-primary-glow transition">
-            Login
+        <nav className="hidden items-center gap-12 lg:flex">
+          <Link to="/" activeOptions={{ exact: true }} className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
+            Home
+          </Link>
+          <Link to="/about-us" className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
+            About Us
+          </Link>
+          <DesktopDropdown label="Resources" items={resourceLinks} />
+          <DesktopDropdown label="Programs" items={programLinks} />
+          <Link to="/get-involved" className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
+            Get Involved
+          </Link>
+          <Link to="/contact-us" className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
+            Contact
           </Link>
         </nav>
 
-        <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Menu">
-          {open ? <X size={22} /> : <Menu size={22} />}
+        <div className="hidden lg:block">
+          <Link to="/login" className="inline-flex min-w-[112px] items-center justify-center rounded-full bg-primary px-7 py-3 text-[0.95rem] font-semibold uppercase tracking-[0.02em] text-primary-foreground transition hover:opacity-90">
+            Login
+          </Link>
+        </div>
+
+        <button className="rounded-full border border-border p-2.5 lg:hidden" onClick={() => setOpen((v) => !v)} aria-label="Toggle navigation">
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-border bg-background">
-          <div className="px-4 py-4 flex flex-col gap-1 text-sm">
-            <Link to="/" onClick={() => setOpen(false)} className="py-2">Home</Link>
-            <Link to="/about-us" onClick={() => setOpen(false)} className="py-2">About Us</Link>
-            <div className="py-2 font-semibold text-muted-foreground text-xs uppercase">Resources</div>
-            {resourceLinks.map((l) => (
-              <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="py-2 pl-3">{l.label}</Link>
-            ))}
-            <div className="py-2 font-semibold text-muted-foreground text-xs uppercase">Programs</div>
-            {programLinks.map((l) => (
-              <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="py-2 pl-3">{l.label}</Link>
-            ))}
-            <Link to="/get-involved" onClick={() => setOpen(false)} className="py-2">Get Involved</Link>
-            <Link to="/contact-us" onClick={() => setOpen(false)} className="py-2">Contact</Link>
-            <Link to="/login" onClick={() => setOpen(false)} className="py-2 mt-2 text-center bg-primary text-primary-foreground rounded-full">Login</Link>
+        <div className="border-t border-border bg-background lg:hidden">
+          <div className="container-shell space-y-5 px-4 py-6 sm:px-6">
+            <div className="space-y-3 text-base font-semibold text-primary">
+              <Link to="/" onClick={() => setOpen(false)} className="block">Home</Link>
+              <Link to="/about-us" onClick={() => setOpen(false)} className="block">About Us</Link>
+              <Link to="/get-involved" onClick={() => setOpen(false)} className="block">Get Involved</Link>
+              <Link to="/contact-us" onClick={() => setOpen(false)} className="block">Contact</Link>
+            </div>
+
+            <div>
+              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Resources</div>
+              <div className="space-y-3 text-base font-semibold text-primary">
+                {resourceLinks.map((item) => (
+                  <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="block">
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Programs</div>
+              <div className="space-y-3 text-base font-semibold text-primary">
+                {programLinks.map((item) => (
+                  <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="block">
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <Link to="/login" onClick={() => setOpen(false)} className="inline-flex min-w-[112px] items-center justify-center rounded-full bg-primary px-7 py-3 text-[0.95rem] font-semibold uppercase tracking-[0.02em] text-primary-foreground transition hover:opacity-90">
+              Login
+            </Link>
           </div>
         </div>
       )}
