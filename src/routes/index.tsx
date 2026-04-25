@@ -1,114 +1,168 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ImagePlaceholder, VideoPlaceholder } from "@/components/Placeholder";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Oneness Generation — What is Oneness Generation?" },
-      { name: "description", content: "Empowering youth to break free of stress and find a calm, joyful state of mind." },
+      {
+        name: "description",
+        content:
+          "Empowering youth to break free of stress and find a calm, joyful state of mind.",
+      },
     ],
   }),
   component: HomePage,
 });
 
 const testimonials = [
-  { name: "Yuvisti", place: "South Africa", quote: "Oneness Generation transformed my academic life; through yoga and meditation, I found clarity and calm to balance studies with a clearer mind and reduced stress." },
-  { name: "Lisa", place: "Germany", quote: "Oneness Generation feels like family—a place where we're united by a shared goal to make a meaningful, positive impact that I truly appreciate and support." },
-  { name: "Sanjay", place: "Zurich, Switzerland", quote: "Guided by Sri Krishnaji and Sri Preethaji, Oneness has been my journey into awakening — dissolving old patterns, opening my heart, and living in a state of connection and grace." },
-  { name: "Nidhi Dev", place: "Pune, Maharashtra", quote: "I would really, ardently love to find each one of you, reading this, experience this liberation, this joy, this bliss, as I have found in me…" },
-  { name: "Jordan Tan", place: "Malaysia", quote: "Oneness Generation brought healing and a new appreciation for life's simple joys. It's been a blessing to connect with dasas, Sri Preethaji and Sri Krishnaji, and their transformative teachings." },
-  { name: "Vaishnavi", place: "Belgaum, India", quote: "From my first session, I felt a relief from stress; yoga and meditation practices have grounded me and brought balance to even my busiest days." },
-  { name: "Shubham", place: "Mumbai, India", quote: "Joining Oneness Generation from the start has been transformative. Teaching Soul Sync and sharing peace with others brings fulfillment and inspires me to keep spreading joy." },
-  { name: "Leon", place: "Germany", quote: "The Oneness Generation unites people of the same age worldwide, creating a supportive community focused on meditation, yoga, and growth in a peaceful, non-judgmental space." },
-  { name: "Jagan", place: "South Africa", quote: "The teachings and meditations have empowered me to live in the present and face life's challenges alongside compassionate, like-minded people sharing the same values." },
+  {
+    name: "Nidhi Dev",
+    place: "Pune, Maharastra",
+    quote:
+      "It was when I truly saw myself as who I truly am, as a whole, not just what I pretend to be, in the external, did I become a better individual. Oneness Helped me actually See myself. When I can now see myself in face value, I can also see others and...",
+  },
+  {
+    name: "Jordan Tan",
+    place: "Malaysia",
+    quote:
+      "A space for healing, transformation, and inner connection. I've learned to appreciate even the smallest things in life, and that has completely shifted my attitude toward life. The presence of the dasas, Sri Preethaji and Sri Krishnaji, the places...",
+  },
 ];
+
+const galleryLabels = ["Vision", "Community", "Retreat", "Meditation"] as const;
 
 function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative bg-soft-gradient overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="text-sm uppercase tracking-widest text-accent font-semibold mb-4">Vision</div>
-            <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-6">
-              What is Oneness Generation?
-            </h1>
-            <p className="text-lg text-muted-foreground mb-4">
-              Empowering youth to break free of stress and find a calm, joyful state of mind.
+      <section className="bg-background">
+        <VideoPlaceholder
+          label="Homepage Hero"
+          aspect="16/9"
+          rounded="rounded-b-[18px]"
+          className="border-0"
+        />
+      </section>
+
+      <section className="bg-panel-moss py-16 md:py-24">
+        <div className="container-shell grid items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="max-w-3xl text-background">
+            <h1 className="mb-8 text-5xl font-semibold md:text-6xl">Vision</h1>
+            <p className="mb-10 text-xl text-background/95 md:text-2xl">
+              Empowering youth to break free of stress and find a calm, joyful state of mind
             </p>
-            <p className="text-base text-muted-foreground mb-8">
-              We're a community of young people with a vision to help ourselves and our fellow youth become free from the shackles of everyday stress and shift from a high-stress beta state of mind to a calm and centered alpha state. Our mission is to make stress-free living a reality for young people.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link to="/about-us" className="px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary-glow transition shadow-soft">
-                Learn More
-              </Link>
-              <Link to="/get-involved" className="px-6 py-3 rounded-full bg-background border border-primary text-primary hover:bg-secondary transition">
-                Join the Movement
-              </Link>
+            <div className="space-y-8 text-lg text-background/92 md:text-[1.12rem]">
+              <p>
+                We&apos;re a community of young people with a vision to help ourselves and our fellow
+                youth become free from the shackles of everyday stress and shift from a high-stress
+                beta state of mind to a calm and centered alpha state.
+              </p>
+              <p>Our mission is to make stress-free living a reality for young people.</p>
             </div>
           </div>
-          <VideoPlaceholder label="Vision Video" aspect="16/9" />
+
+          <div className="space-y-8">
+            <ImagePlaceholder label="Vision Group" aspect="4/3" rounded="rounded-[34px]" />
+            <div className="flex justify-center lg:justify-start">
+              <div className="text-6xl text-background/70">↘</div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Vision gallery */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <ImagePlaceholder key={i} label={`Gallery ${i + 1}`} aspect="4/5" />
+      <section className="bg-background py-10">
+        <div className="container-shell grid gap-5 px-4 sm:px-6 md:grid-cols-4">
+          {galleryLabels.map((label) => (
+            <ImagePlaceholder key={label} label={label} aspect="4/5" rounded="rounded-[24px]" />
           ))}
         </div>
       </section>
 
-      {/* What's new */}
-      <section className="py-16 bg-secondary/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-gradient">What's New?</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {[1, 2].map((i) => (
-              <div key={i} className="bg-card rounded-2xl overflow-hidden shadow-card border border-border">
-                <ImagePlaceholder label={`Event ${i}`} aspect="16/9" rounded="rounded-none" />
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold mb-2">SFZ Training</h3>
-                  <p className="text-muted-foreground mb-4">Dates will be announced soon.</p>
-                  <Link to="/sfz" className="text-primary font-semibold hover:text-primary-glow">
-                    Become an OG Trainer →
+      <section className="bg-background py-20 md:py-24">
+        <div className="container-shell grid gap-10 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="space-y-8 pt-4">
+            <div className="inline-flex rounded-full border border-primary/40 px-5 py-2 text-xl font-semibold text-primary/65">
+              Testimonials
+            </div>
+            <h2 className="max-w-sm text-4xl font-semibold leading-tight text-foreground">
+              What Our Awesome Participants Say
+            </h2>
+            <div className="flex gap-5 text-primary/55">
+              <button className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-secondary">
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              <button className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-secondary">
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-8 xl:grid-cols-2">
+            {testimonials.map((item) => (
+              <article key={item.name} className="rounded-[20px] border border-border bg-secondary px-10 py-12 shadow-card">
+                <div className="mb-6 flex items-start gap-5">
+                  <ImagePlaceholder
+                    label={item.name}
+                    aspect="1/1"
+                    rounded="rounded-full"
+                    className="h-24 w-24 shrink-0"
+                  />
+                  <div>
+                    <h3 className="text-[2rem] font-semibold text-foreground">{item.name}</h3>
+                    <p className="mt-1 text-xl text-foreground/80">({item.place})</p>
+                    <p className="mt-6 text-base text-muted-foreground">Testimonial</p>
+                  </div>
+                </div>
+                <p className="text-lg leading-9 text-muted-foreground">
+                  {item.quote} <span className="font-semibold text-primary">Read More</span>
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background py-12 md:py-16">
+        <div className="container-shell px-4 text-center sm:px-6">
+          <h2 className="text-[clamp(2.75rem,4vw,4rem)] font-semibold text-panel-moss">
+            Instagram Posts
+          </h2>
+        </div>
+      </section>
+
+      <section className="bg-background pb-12">
+        <div className="container-shell px-4 sm:px-6">
+          <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+            <div className="overflow-hidden rounded-[26px]">
+              <ImagePlaceholder label="Let&apos;s Connect" aspect="16/9" rounded="rounded-[26px]" />
+            </div>
+            <div className="rounded-[26px] border border-border bg-card px-9 py-9 shadow-card md:px-10 md:py-10">
+              <h3 className="mb-8 text-4xl font-semibold uppercase text-foreground">Contact</h3>
+              <div className="space-y-9">
+                <input
+                  placeholder="Name *"
+                  className="w-full border-b border-border bg-transparent pb-4 text-xl text-foreground outline-none placeholder:text-muted-foreground"
+                />
+                <input
+                  placeholder="Email *"
+                  className="w-full border-b border-border bg-transparent pb-4 text-xl text-foreground outline-none placeholder:text-muted-foreground"
+                />
+                <textarea
+                  rows={4}
+                  placeholder="Message *"
+                  className="w-full border-b border-border bg-transparent pb-4 text-xl text-foreground outline-none placeholder:text-muted-foreground"
+                />
+                <div className="pt-2 text-center">
+                  <Link
+                    to="/contact-us"
+                    className="inline-flex rounded-[14px] bg-primary px-7 py-3 text-xl font-semibold text-primary-foreground"
+                  >
+                    Submit
                   </Link>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12">
-          <div className="text-sm uppercase tracking-widest text-accent font-semibold mb-2">Testimonials</div>
-          <h2 className="text-3xl md:text-5xl font-bold text-gradient">What Our Awesome Participants Say</h2>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <div key={t.name} className="bg-card rounded-2xl p-6 shadow-card border border-border">
-              <ImagePlaceholder label={`${t.name}'s Photo`} aspect="1/1" className="w-20 h-20 mb-4" rounded="rounded-full" />
-              <h3 className="font-bold text-lg">{t.name}</h3>
-              <p className="text-sm text-muted-foreground mb-3">({t.place})</p>
-              <p className="text-sm text-foreground/80 italic">&ldquo;{t.quote}&rdquo;</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Instagram posts */}
-      <section className="py-16 bg-secondary/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-center mb-10 text-gradient">Instagram Posts</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <ImagePlaceholder key={i} label={`Instagram ${i + 1}`} aspect="1/1" />
-            ))}
           </div>
         </div>
       </section>
