@@ -62,7 +62,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-soft backdrop-blur-sm">
+    <header className="sticky top-0 z-50 bg-secondary backdrop-blur-sm">
       <div className="container-shell flex h-26 items-center justify-between gap-6 px-4 sm:px-6">
         <Link to="/" className="shrink-0">
           <BrandMark />
