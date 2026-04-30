@@ -38,41 +38,46 @@
 :root {
   --radius: 0.5rem;
 
-  --background: oklch(0.985 0.01 85);
-  --foreground: oklch(0.28 0.02 65);
+  /* Pure white page background */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.22 0.01 70);
 
-  --card: oklch(1 0.003 85);
-  --card-foreground: oklch(0.28 0.02 65);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.01 70);
 
-  --popover: oklch(1 0.003 85);
-  --popover-foreground: oklch(0.28 0.02 65);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.01 70);
 
-  --primary: oklch(0.66 0.12 65);
-  --primary-foreground: oklch(0.99 0.01 85);
-  --primary-glow: oklch(0.74 0.09 68);
+  /* Brand gold/brown — used for nav links, LOGIN button, footer headings */
+  --primary: oklch(0.62 0.12 70);
+  --primary-foreground: oklch(0.985 0.01 85);
+  --primary-glow: oklch(0.7 0.11 72);
 
-  --secondary: oklch(0.95 0.01 85);
-  --secondary-foreground: oklch(0.31 0.02 65);
+  /* Cream / beige — header & footer background */
+  --secondary: oklch(0.955 0.018 88);
+  --secondary-foreground: oklch(0.32 0.04 70);
 
-  --muted: oklch(0.965 0.008 85);
-  --muted-foreground: oklch(0.58 0.02 65);
+  --muted: oklch(0.96 0.012 85);
+  --muted-foreground: oklch(0.5 0.02 70);
 
-  --accent: oklch(0.62 0.08 90);
-  --accent-foreground: oklch(0.22 0.01 60);
+  --accent: oklch(0.62 0.12 70);
+  --accent-foreground: oklch(0.985 0.01 85);
 
   --destructive: oklch(0.58 0.2 28);
   --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(0.89 0.01 80);
-  --input: oklch(0.9 0.01 80);
-  --ring: oklch(0.66 0.12 65);
+  --border: oklch(0.89 0.012 80);
+  --input: oklch(0.9 0.012 80);
+  --ring: oklch(0.62 0.12 70);
 
-  --panel-olive: oklch(0.5 0.03 105);
+  /* Olive/khaki used for the Vision panel and "What's new?" headline */
+  --panel-olive: oklch(0.55 0.035 105);
   --panel-deep: oklch(0.31 0.03 200);
-  --panel-gold: oklch(0.68 0.11 70);
-  --panel-sand: oklch(0.8 0.05 78);
-  --panel-moss: oklch(0.43 0.02 100);
-  --panel-paper: oklch(0.985 0.008 85);
+  --panel-gold: oklch(0.62 0.12 70);
+  --panel-sand: oklch(0.85 0.06 80);
+  --panel-moss: oklch(0.55 0.035 105);
+  --panel-cream: oklch(0.955 0.018 88);
+  --panel-paper: oklch(1 0 0);
   --panel-hero: oklch(0.25 0.01 60 / 0.42);
 
   --shadow-soft: 0 10px 30px -18px oklch(0.2 0.01 60 / 0.18);
@@ -170,6 +175,18 @@
   .container-shell {
     width: min(1280px, calc(100vw - 2rem));
     margin-inline: auto;
+  }
+
+  @keyframes marquee-x {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee-x 40s linear infinite;
+  }
+  .marquee-mask {
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
   }
 
   .media-fade {

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
+import logoUrl from "@/assets/logo.png";
 
 const resourceLinks = [
   { to: "/soul-sync", label: "Soul Sync" },
@@ -19,17 +20,13 @@ const programLinks = [
 
 function BrandMark() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative h-11 w-11 text-foreground">
-        <div className="absolute left-1/2 top-1 h-4 w-7 -translate-x-1/2 rounded-full border-2 border-current" />
-        <div className="absolute left-1/2 top-3.5 h-4 w-7 -translate-x-1/2 rounded-full border-2 border-current" />
-        <div className="absolute left-1/2 top-6.5 h-0.5 w-0.5 -translate-x-1/2 rounded-full bg-current" />
-      </div>
-      <div className="leading-none text-[0.72rem] font-semibold uppercase tracking-[0.02em] text-foreground">
-        <div>Oneness</div>
-        <div>Generation</div>
-      </div>
-    </div>
+    <img
+      src={logoUrl}
+      alt="Oneness Generation"
+      width={180}
+      height={64}
+      className="h-14 w-auto object-contain"
+    />
   );
 }
 
@@ -65,7 +62,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-soft backdrop-blur-sm">
+    <header className="sticky top-0 z-50 bg-secondary backdrop-blur-sm">
       <div className="container-shell flex h-26 items-center justify-between gap-6 px-4 sm:px-6">
         <Link to="/" className="shrink-0">
           <BrandMark />
@@ -89,8 +86,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden lg:block">
-          <Link to="/login" className="inline-flex min-w-[112px] items-center justify-center rounded-full bg-primary px-7 py-3 text-[0.95rem] font-semibold uppercase tracking-[0.02em] text-primary-foreground transition hover:opacity-90">
-            Login
+          <Link to="/login" className="inline-flex min-w-[120px] items-center justify-center rounded-full bg-primary px-8 py-3.5 text-[0.95rem] font-bold uppercase tracking-[0.08em] text-primary-foreground shadow-soft transition hover:opacity-90">
+            LOGIN
           </Link>
         </div>
 
