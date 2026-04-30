@@ -87,23 +87,19 @@ function SoulSyncPage() {
         <div className="container-shell px-4 sm:px-6">
           <div className="mx-auto max-w-[1060px]">
             {pillars.map((pillar, index) => (
-              <div
-                key={pillar.title}
-                className={
-                  index === pillars.length - 1 ? "h-[60svh] md:h-[72svh]" : "h-[72svh] md:h-[82svh]"
-                }
-              >
+              <div key={pillar.title} className="h-[88svh]">
                 <article
-                  className={`sticky rounded-[28px] px-7 py-8 shadow-card md:px-10 md:py-10 ${pillar.tone}`}
+                  className={`sticky overflow-hidden rounded-[28px] px-7 py-10 shadow-card md:px-12 md:py-14 ${pillar.tone}`}
                   style={{
-                    top: `calc(6.5rem + ${index * 0.9}rem)`,
+                    top: `calc(7rem + ${index * 1.1}rem)`,
                     zIndex: index + 1,
+                    minHeight: "76svh",
                   }}
                 >
-                  <div className="grid items-center gap-8 md:grid-cols-[1fr_0.9fr] md:gap-10">
+                  <div className="grid h-full items-center gap-8 md:grid-cols-[1fr_1fr] md:gap-12">
                     <div className="max-w-[28rem]">
                       <h2 className="text-[clamp(2rem,3vw,3rem)] font-semibold">{pillar.title}</h2>
-                      <div className="mt-14 text-[clamp(1.4rem,2vw,1.8rem)] font-semibold">
+                      <div className="mt-16 text-[clamp(1.4rem,2vw,1.8rem)] font-semibold">
                         {pillar.subtitle}
                       </div>
                       <p className="mt-4 text-[1.02rem] leading-8 text-current/95 md:text-[1.08rem] md:leading-9">
