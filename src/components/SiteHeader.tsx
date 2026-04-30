@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
+import logoUrl from "@/assets/logo.png";
 
 const resourceLinks = [
   { to: "/soul-sync", label: "Soul Sync" },
@@ -19,17 +20,13 @@ const programLinks = [
 
 function BrandMark() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative h-11 w-11 text-foreground">
-        <div className="absolute left-1/2 top-1 h-4 w-7 -translate-x-1/2 rounded-full border-2 border-current" />
-        <div className="absolute left-1/2 top-3.5 h-4 w-7 -translate-x-1/2 rounded-full border-2 border-current" />
-        <div className="absolute left-1/2 top-6.5 h-0.5 w-0.5 -translate-x-1/2 rounded-full bg-current" />
-      </div>
-      <div className="leading-none text-[0.72rem] font-semibold uppercase tracking-[0.02em] text-foreground">
-        <div>Oneness</div>
-        <div>Generation</div>
-      </div>
-    </div>
+    <img
+      src={logoUrl}
+      alt="Oneness Generation"
+      width={180}
+      height={64}
+      className="h-14 w-auto object-contain"
+    />
   );
 }
 
