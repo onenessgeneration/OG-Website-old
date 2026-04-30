@@ -70,13 +70,13 @@
   --input: oklch(0.9 0.012 80);
   --ring: oklch(0.62 0.12 70);
 
-  /* Screenshot-matched bands/cards */
-  --panel-olive: oklch(0.58 0.06 120);
-  --panel-deep: oklch(0.29 0.04 196);
-  --panel-gold: oklch(0.65 0.13 68);
-  --panel-sand: oklch(0.79 0.05 76);
-  --panel-moss: oklch(0.48 0.03 105);
-  --panel-bhavana: oklch(0.57 0.12 61);
+  /* Screenshot-matched bands/cards (Soul Sync pillars, in order) */
+  --panel-olive: oklch(0.62 0.07 130);     /* Mudra — sage green ~#7B9A5A */
+  --panel-deep: oklch(0.32 0.018 165);     /* Mantra — deep forest ~#2C3A33 */
+  --panel-gold: oklch(0.64 0.12 68);       /* Asana — ochre/gold ~#B8853A */
+  --panel-sand: oklch(0.76 0.045 75);      /* Pranayama — light tan ~#C9B393 */
+  --panel-moss: oklch(0.55 0.035 105);     /* Dharana — olive/khaki ~#7D7E5B */
+  --panel-bhavana: oklch(0.57 0.10 55);    /* Bhavana — warm caramel ~#A87037 */
   --panel-cream: oklch(0.955 0.018 88);
   --panel-paper: oklch(1 0 0);
   --about-band: oklch(0.82 0.056 75);
