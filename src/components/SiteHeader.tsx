@@ -86,8 +86,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden lg:block">
-          <Link to="/login" className="inline-flex min-w-[112px] items-center justify-center rounded-full bg-primary px-7 py-3 text-[0.95rem] font-semibold uppercase tracking-[0.02em] text-primary-foreground transition hover:opacity-90">
-            Login
+          <Link to="/login" className="inline-flex min-w-[120px] items-center justify-center rounded-full bg-primary px-8 py-3.5 text-[0.95rem] font-bold uppercase tracking-[0.08em] text-primary-foreground shadow-soft transition hover:opacity-90">
+            LOGIN
           </Link>
         </div>
 
