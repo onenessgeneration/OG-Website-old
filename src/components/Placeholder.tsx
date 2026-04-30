@@ -22,11 +22,13 @@ export function ImagePlaceholder({
     >
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.6),rgba(208,185,140,0.16))]" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 media-fade opacity-50" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="rounded-full border border-border bg-background/90 px-4 py-1.5 text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
-          {label}
+      {label ? (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="rounded-full border border-border bg-background/90 px-4 py-1.5 text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+            {label}
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }
