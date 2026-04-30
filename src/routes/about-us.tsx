@@ -5,7 +5,10 @@ export const Route = createFileRoute("/about-us")({
   head: () => ({
     meta: [
       { title: "About Us — Oneness Generation" },
-      { name: "description", content: "A movement, a generation of young people moving towards Oneness." },
+      {
+        name: "description",
+        content: "A movement, a generation of young people moving towards Oneness.",
+      },
     ],
   }),
   component: AboutPage,
@@ -80,18 +83,29 @@ function AboutPage() {
         {sections.map((section) => (
           <div key={section.title} className={`${section.bgClass}`}>
             <div className="container-shell px-6 py-9 sm:px-8 md:px-10 md:py-10">
-              <div className={`grid items-center gap-8 md:grid-cols-[0.96fr_0.94fr] md:gap-10 ${section.imageFirst ? "" : "md:[direction:rtl]"}`}>
+              <div
+                className={`grid items-center gap-8 md:grid-cols-[0.96fr_0.94fr] md:gap-10 ${section.imageFirst ? "" : "md:[direction:rtl]"}`}
+              >
                 <div className="md:[direction:ltr]">
                   <div className="overflow-hidden rounded-[22px]">
-                    <ImagePlaceholder label={undefined} aspect="16/11" rounded="rounded-[22px]" className="border-0" />
+                    <ImagePlaceholder
+                      label={undefined}
+                      aspect="16/11"
+                      rounded="rounded-[22px]"
+                      className="border-0"
+                    />
                   </div>
                 </div>
 
                 <div className="md:[direction:ltr] px-4 md:px-0">
-                  <h2 className={`text-[clamp(2.2rem,3.5vw,3.7rem)] font-semibold leading-[0.95] ${section.titleClass}`}>
+                  <h2
+                    className={`text-[clamp(2.2rem,3.5vw,3.7rem)] font-semibold leading-[0.95] ${section.titleClass}`}
+                  >
                     {section.title}
                   </h2>
-                  <div className={`mt-4 text-[clamp(1.35rem,2vw,1.9rem)] font-medium ${section.subtitleClass}`}>
+                  <div
+                    className={`mt-4 text-[clamp(1.35rem,2vw,1.9rem)] font-medium ${section.subtitleClass}`}
+                  >
                     {section.eyebrow}
                   </div>
                   <p className={`mt-5 max-w-[38rem] text-[1.05rem] leading-9 ${section.textClass}`}>

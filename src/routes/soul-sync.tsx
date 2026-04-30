@@ -7,8 +7,7 @@ export const Route = createFileRoute("/soul-sync")({
       { title: "Soul Sync — Oneness Generation" },
       {
         name: "description",
-        content:
-          "The science and ancient wisdom of Soul Sync — a transformative meditation.",
+        content: "The science and ancient wisdom of Soul Sync — a transformative meditation.",
       },
     ],
   }),
@@ -90,7 +89,9 @@ function SoulSyncPage() {
             {pillars.map((pillar, index) => (
               <div
                 key={pillar.title}
-                className={index === pillars.length - 1 ? "h-[60svh] md:h-[72svh]" : "h-[72svh] md:h-[82svh]"}
+                className={
+                  index === pillars.length - 1 ? "h-[60svh] md:h-[72svh]" : "h-[72svh] md:h-[82svh]"
+                }
               >
                 <article
                   className={`sticky rounded-[28px] px-7 py-8 shadow-card md:px-10 md:py-10 ${pillar.tone}`}
@@ -102,7 +103,9 @@ function SoulSyncPage() {
                   <div className="grid items-center gap-8 md:grid-cols-[1fr_0.9fr] md:gap-10">
                     <div className="max-w-[28rem]">
                       <h2 className="text-[clamp(2rem,3vw,3rem)] font-semibold">{pillar.title}</h2>
-                      <div className="mt-14 text-[clamp(1.4rem,2vw,1.8rem)] font-semibold">{pillar.subtitle}</div>
+                      <div className="mt-14 text-[clamp(1.4rem,2vw,1.8rem)] font-semibold">
+                        {pillar.subtitle}
+                      </div>
                       <p className="mt-4 text-[1.02rem] leading-8 text-current/95 md:text-[1.08rem] md:leading-9">
                         {pillar.body}
                       </p>
@@ -132,13 +135,23 @@ function SoulSyncPage() {
 
       <section className="bg-background pb-16">
         <div className="w-full overflow-hidden">
-          <ImagePlaceholder label={undefined} aspect="21/8" rounded="rounded-none" className="border-0" />
+          <ImagePlaceholder
+            label={undefined}
+            aspect="21/8"
+            rounded="rounded-none"
+            className="border-0"
+          />
         </div>
       </section>
 
       <section className="bg-background pb-20">
         <div className="w-full overflow-hidden">
-          <ImagePlaceholder label={undefined} aspect="21/8" rounded="rounded-none" className="border-0" />
+          <ImagePlaceholder
+            label={undefined}
+            aspect="21/8"
+            rounded="rounded-none"
+            className="border-0"
+          />
         </div>
         <div className="container-shell px-6 py-12 md:px-10 md:py-14">
           <h3 className="mb-6 text-[clamp(2.2rem,4vw,3.4rem)] font-semibold text-primary">
@@ -147,18 +160,18 @@ function SoulSyncPage() {
           <div className="space-y-7 text-[1.08rem] leading-9 text-foreground md:text-[1.18rem] md:leading-10">
             <p>
               Soul Sync, created by Sri Preethaji, is a 9–12 minute meditation designed to calm your
-              mind, expand awareness, and manifest heartfelt intentions. This transformative practice
-              blends ancient wisdom with modern neuroscience to create a powerful shift from mental chaos
-              to clarity and purpose.
+              mind, expand awareness, and manifest heartfelt intentions. This transformative
+              practice blends ancient wisdom with modern neuroscience to create a powerful shift
+              from mental chaos to clarity and purpose.
             </p>
             <p>
-              The six-step process aligns your breath, mind, and heart, guiding you from a restless beta
-              state to a calm, creative alpha state.
+              The six-step process aligns your breath, mind, and heart, guiding you from a restless
+              beta state to a calm, creative alpha state.
             </p>
             <p>
-              Whether practiced solo or in a group, this meditation is a gateway to effortless living,
-              connecting you deeply with life and setting you on a path of clarity, grace, and purpose.
-              Embrace the beauty and power of Soul Sync to start your day in flow.
+              Whether practiced solo or in a group, this meditation is a gateway to effortless
+              living, connecting you deeply with life and setting you on a path of clarity, grace,
+              and purpose. Embrace the beauty and power of Soul Sync to start your day in flow.
             </p>
           </div>
         </div>
