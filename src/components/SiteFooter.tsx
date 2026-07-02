@@ -1,103 +1,115 @@
-import { Link } from "@tanstack/react-router";
 import {
-  CircleFadingArrowUp,
-  Facebook,
-  Instagram,
-  Linkedin,
-  MessageCircle,
-  Music2,
-  Send,
-  Twitch,
-  Youtube,
-} from "lucide-react";
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaSnapchatGhost,
+  FaTiktok,
+  FaTwitch,
+  FaWhatsapp,
+  FaYoutube,
+} from "react-icons/fa";
+import { Link } from "@tanstack/react-router";
 
-const menu = [
-  ["Home", "/"],
-  ["About Us", "/about-us"],
-  ["Programs", "/programs"],
-  ["Blogs", "/blog"],
-  ["Trainers", "/sfz"],
-  ["Soul Sync", "/soul-sync"],
-  ["Serene Mind", "/serene-mind"],
-  ["Oneness Yoga", "/oneness-yoga"],
-  ["Gallery", "/gallery"],
-  ["Wallpapers", "/wallpapers"],
-  ["Get Involved", "/get-involved"],
-  ["Contact", "/contact-us"],
-  ["Login", "/login"],
-] as const;
-
-const social = [
-  ["WhatsApp", "https://chat.whatsapp.com/GZjYKf34xfwLWVkP5Ss0IJ", MessageCircle],
-  ["Instagram", "https://www.instagram.com/onenessgeneration/", Instagram],
-  ["Twitch", "https://www.twitch.tv/onenessgeneration", Twitch],
-  ["Snapchat", "https://www.snapchat.com/add/one.gen", CircleFadingArrowUp],
-  ["Facebook", "https://www.facebook.com/onenessgeneration", Facebook],
-  ["LinkedIn", "https://www.linkedin.com/company/onenessgeneration/", Linkedin],
-  ["TikTok", "https://www.tiktok.com/@oneness.generation", Music2],
-  ["YouTube", "https://www.youtube.com/@OnenessGeneration", Youtube],
-] as const;
-
-const policies = ["Terms & Conditions", "Privacy Policy", "Cookie Policy"] as const;
+// Ported from OG_Website oneness-frontend/src/Common/Footer.jsx.
 
 export function SiteFooter() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="mt-20 bg-secondary">
-      <div className="container-shell px-4 sm:px-6">
-        <div className="border-t border-border py-10">
-          <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr] lg:grid-cols-[1.2fr_1fr_1.1fr]">
-            <div className="grid gap-3 text-[1.05rem] text-primary">
-              <h3 className="text-[1.05rem] font-semibold">Menu</h3>
-              <div className="grid gap-3 text-[0.97rem]">
-                {menu.map(([label, to]) => (
-                  <Link key={to} to={to} className="transition hover:opacity-75">
-                    {label}
-                  </Link>
-                ))}
+    <div className="bg-tan">
+      <div className="bg-tan text-brown py-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 md:gap-8 gap-4 w-full">
+            {/* Main Menu */}
+            <div>
+              <h2 className="md:text-lg text-sm font-semibold md:mb-4 mb-2">Menu</h2>
+              <ul className="md:space-y-4 space-y-2">
+                <li><Link to="/" className="hover:underline">Home</Link></li>
+                <li><Link to="/about-us" className="hover:underline">About Us</Link></li>
+                <li><Link to="/programs" className="hover:underline">Programs</Link></li>
+                <li><Link to="/blog" className="hover:underline">Blogs</Link></li>
+                <li><a href="/trainer" className="hover:underline">Trainers</a></li>
+                <li><Link to="/soul-sync" className="hover:underline">Soul Sync</Link></li>
+                <li><Link to="/serene-mind" className="hover:underline">Serene Mind</Link></li>
+                <li><Link to="/oneness-yoga" className="hover:underline">Oneness Yoga</Link></li>
+                <li><Link to="/gallery" className="hover:underline">Gallery</Link></li>
+                <li><Link to="/wallpapers" className="hover:underline">Wallpapers</Link></li>
+                <li><Link to="/get-involved" className="hover:underline">Get Involved</Link></li>
+                <li><Link to="/contact-us" className="hover:underline">Contact</Link></li>
+                <li><Link to="/login" className="hover:underline">Login</Link></li>
+              </ul>
+            </div>
+
+            {/* Social + Policies */}
+            <div className="space-y-6">
+              <div>
+                <h2 className="md:text-lg text-sm font-semibold md:mb-4 mb-2">Follow Us</h2>
+                <ul className="md:space-y-4 space-y-3">
+                  <li className="flex items-center space-x-2">
+                    <FaWhatsapp />
+                    <a href="https://chat.whatsapp.com/GZjYKf34xfwLWVkP5Ss0IJ" target="_blank" rel="noopener noreferrer" className="hover:underline">WhatsApp</a>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <FaInstagram />
+                    <a href="https://www.instagram.com/onenessgeneration/" target="_blank" rel="noopener noreferrer" className="hover:underline">Instagram</a>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <FaTwitch />
+                    <a href="https://www.twitch.tv/onenessgeneration" target="_blank" rel="noopener noreferrer" className="hover:underline">Twitch</a>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <FaSnapchatGhost />
+                    <a href="https://www.snapchat.com/add/one.gen?share_id=HwJDX3a2uIU&locale=en-US" target="_blank" rel="noopener noreferrer" className="hover:underline">Snapchat</a>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <FaFacebook />
+                    <a href="https://www.facebook.com/onenessgeneration" target="_blank" rel="noopener noreferrer" className="hover:underline">Facebook</a>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <FaLinkedin />
+                    <a href="https://www.linkedin.com/company/onenessgeneration/" target="_blank" rel="noopener noreferrer" className="hover:underline">LinkedIn</a>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <FaTiktok />
+                    <a href="https://www.tiktok.com/@oneness.generation?_t=ZM-8uwsF9hQ7cs&_r=1" target="_blank" rel="noopener noreferrer" className="hover:underline">Tiktok</a>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <FaYoutube />
+                    <a href="https://www.youtube.com/@OnenessGeneration" target="_blank" rel="noopener noreferrer" className="hover:underline">Youtube</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h2 className="md:text-lg text-sm font-semibold md:mb-4 mb-2">Policies</h2>
+                <ul className="md:space-y-4 space-y-3">
+                  <li><a href="/terms&conditions" className="hover:underline">Terms &amp; Conditions</a></li>
+                  <li><a href="/privacy-Policy" className="hover:underline">Privacy Policy</a></li>
+                  <li><a href="/cookie-Policy" className="hover:underline">Cookie Policy</a></li>
+                </ul>
               </div>
             </div>
 
-            <div className="space-y-8 text-primary">
-              <div>
-                <h3 className="mb-3 text-[1.05rem] font-semibold">Follow Us</h3>
-                <div className="grid gap-3 text-[0.97rem]">
-                  {social.map(([label, url, Icon]) => (
-                    <a key={url} href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 transition hover:opacity-75">
-                      <Icon className="h-4 w-4" />
-                      <span>{label}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="mb-3 text-[1.05rem] font-semibold">Policies</h3>
-                <div className="grid gap-3 text-[0.97rem]">
-                  {policies.map((label) => (
-                    <span key={label}>{label}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="text-primary">
-              <h3 className="mb-3 text-[1.05rem] font-semibold">Contact Us</h3>
-              <div className="grid gap-3 text-[0.97rem]">
-                <a href="mailto:hello@onenessgeneration.org" className="transition hover:opacity-75">
-                  Email: hello@onenessgeneration.org
+            {/* Contact Info */}
+            <div className="col-span-2 md:col-span-1">
+              <h2 className="md:text-lg text-sm font-semibold md:mb-4 mb-2 w-full">Contact Us</h2>
+              <div className="flex md:grid gap-2">
+                <a href="mailto:hello@onenessgeneration.org" className="md:text-sm text-[10px]">
+                  Email: <span className="hover:underline underline-offset-4">hello@onenessgeneration.org</span>
                 </a>
-                <a href="tel:+917095001991" className="transition hover:opacity-75">
-                  Phone: +91 70950 01991
+                <a className="md:text-sm text-[10px]" href="tel:+917095001991">
+                  Phone: <span className="hover:underline underline-offset-4">+91 70950 01991</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="pt-12 text-center text-[clamp(2rem,5vw,4rem)] font-medium leading-none text-muted-foreground/70">
-            © 2026 Oneness Generation. All Rights Reserved.
+          {/* Footer Bottom */}
+          <div className="mt-8 text-center md:text-4xl text-sm text-gray-400 capitalize">
+            © {year} Oneness Generation. All rights reserved.
           </div>
         </div>
       </div>
-    </footer>
+    </div>
   );
 }

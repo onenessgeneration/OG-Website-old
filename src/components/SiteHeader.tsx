@@ -1,7 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import logoUrl from "@/assets/logo.png";
+import { MobileMenu } from "./MobileMenu";
+
+// Ported from OG_Website oneness-frontend/src/Common/Header.jsx.
+// Preserves the original bg-tan / text-brown palette, chevron dropdowns,
+// and Login pill button.
 
 const resourceLinks = [
   { to: "/soul-sync", label: "Soul Sync" },
@@ -18,122 +22,105 @@ const programLinks = [
   { to: "/programs", label: "Events" },
 ] as const;
 
-function BrandMark() {
+function ChevronDownSvg() {
   return (
-    <img
-      src={logoUrl}
-      alt="Oneness Generation"
-      width={180}
-      height={64}
-      className="h-14 w-auto object-contain"
-    />
-  );
-}
-
-function DesktopDropdown({
-  label,
-  items,
-}: {
-  label: string;
-  items: readonly { to: string; label: string }[];
-}) {
-  return (
-    <div className="group relative">
-      <button className="flex items-center gap-2 text-[1rem] font-semibold text-primary transition hover:opacity-80">
-        <span>{label}</span>
-        <ChevronDown className="h-5 w-5 text-foreground" />
-      </button>
-      <div className="pointer-events-none absolute left-0 top-full pt-4 opacity-0 transition duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
-        <div className="min-w-[340px] rounded-2xl border border-border bg-card p-6 shadow-card">
-          <div className="space-y-5">
-            {items.map((item) => (
-              <Link key={item.to} to={item.to} className="block text-[1rem] font-semibold text-primary transition hover:opacity-80">
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <svg className="w-5 h-5 text-brown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+    </svg>
   );
 }
 
 export function SiteHeader() {
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-secondary backdrop-blur-sm">
-      <div className="container-shell flex h-26 items-center justify-between gap-6 px-4 sm:px-6">
-        <Link to="/" className="shrink-0">
-          <BrandMark />
-        </Link>
+    <header className="bg-tan text-brown shadow-lg sticky top-0 z-[1000]">
+      <div className="container mx-auto px-5 flex items-center justify-between py-3 md:py-4 space-x-5">
+        <a href="/" className="shrink-0">
+          <img src={logoUrl} alt="Logo" className="md:w-24 w-20" />
+        </a>
 
-        <nav className="hidden items-center gap-12 lg:flex">
-          <Link to="/" activeOptions={{ exact: true }} className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
-            Home
-          </Link>
-          <Link to="/about-us" className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
-            About Us
-          </Link>
-          <DesktopDropdown label="Resources" items={resourceLinks} />
-          <DesktopDropdown label="Programs" items={programLinks} />
-          <Link to="/get-involved" className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
-            Get Involved
-          </Link>
-          <Link to="/contact-us" className="text-[1rem] font-semibold text-primary transition hover:opacity-80">
-            Contact
-          </Link>
-        </nav>
+        <div className="w-full flex justify-end items-center gap-5 text-brown">
+          <div className="lg:flex items-center gap-8 font-semibold hidden">
+            <Link to="/" className="menu-item xl:text-lg text-[13px]">
+              Home
+            </Link>
+            <Link to="/about-us" className="menu-item xl:text-lg text-[13px] whitespace-nowrap">
+              About Us
+            </Link>
 
-        <div className="hidden lg:block">
-          <Link to="/login" className="inline-flex min-w-[120px] items-center justify-center rounded-full bg-primary px-8 py-3.5 text-[0.95rem] font-bold uppercase tracking-[0.08em] text-primary-foreground shadow-soft transition hover:opacity-90">
-            LOGIN
-          </Link>
-        </div>
-
-        <button className="rounded-full border border-border p-2.5 lg:hidden" onClick={() => setOpen((v) => !v)} aria-label="Toggle navigation">
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
-      </div>
-
-      {open && (
-        <div className="border-t border-border bg-background lg:hidden">
-          <div className="container-shell space-y-5 px-4 py-6 sm:px-6">
-            <div className="space-y-3 text-base font-semibold text-primary">
-              <Link to="/" onClick={() => setOpen(false)} className="block">Home</Link>
-              <Link to="/about-us" onClick={() => setOpen(false)} className="block">About Us</Link>
-              <Link to="/get-involved" onClick={() => setOpen(false)} className="block">Get Involved</Link>
-              <Link to="/contact-us" onClick={() => setOpen(false)} className="block">Contact</Link>
-            </div>
-
-            <div>
-              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Resources</div>
-              <div className="space-y-3 text-base font-semibold text-primary">
-                {resourceLinks.map((item) => (
-                  <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="block">
-                    {item.label}
-                  </Link>
+            {/* Resources dropdown */}
+            <div className="relative group">
+              <button className="flex items-center gap-2 text-gray-800">
+                <span className="xl:text-lg text-sm font-semibold text-brown">Resources</span>
+                <ChevronDownSvg />
+              </button>
+              <ul className="absolute z-50 left-0 xl:text-lg text-sm bg-white rounded-md shadow-lg text-brown hidden group-hover:block w-48">
+                {resourceLinks.map((item, i) => (
+                  <li key={item.to}>
+                    <Link
+                      to={item.to}
+                      className={
+                        "block px-4 py-2 w-full text-left" +
+                        (i === 0 ? " rounded-t-md" : "") +
+                        (i === resourceLinks.length - 1 ? " rounded-b-md" : "")
+                      }
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div>
-              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Programs</div>
-              <div className="space-y-3 text-base font-semibold text-primary">
-                {programLinks.map((item) => (
-                  <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="block">
-                    {item.label}
-                  </Link>
+            {/* Programs dropdown */}
+            <div className="relative group">
+              <button className="flex items-center gap-2 text-gray-800">
+                <span className="xl:text-lg text-sm font-semibold text-brown">Programs</span>
+                <ChevronDownSvg />
+              </button>
+              <ul className="absolute z-50 left-0 xl:text-lg text-sm bg-white rounded-md shadow-lg text-brown hidden group-hover:block w-48">
+                {programLinks.map((item, i) => (
+                  <li key={item.to}>
+                    <Link
+                      to={item.to}
+                      className={
+                        "block px-4 py-2 w-full text-left" +
+                        (i === 0 ? " rounded-t-md" : "") +
+                        (i === programLinks.length - 1 ? " rounded-b-md" : "")
+                      }
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <Link to="/login" onClick={() => setOpen(false)} className="inline-flex min-w-[112px] items-center justify-center rounded-full bg-primary px-7 py-3 text-[0.95rem] font-semibold uppercase tracking-[0.02em] text-primary-foreground transition hover:opacity-90">
+            <Link to="/get-involved" className="menu-item xl:text-lg text-[13px] whitespace-nowrap">
+              Get Involved
+            </Link>
+            <Link to="/contact-us" className="menu-item xl:text-lg text-[13px] whitespace-nowrap">
+              Contact
+            </Link>
+            <Link
+              to="/login"
+              className="md:px-6 px-4 uppercase text-[14px] relative md:py-[6px] py-[4px] bg-brown text-white rounded-full hover:bg-darkGreyBrown transition duration-300"
+            >
               Login
             </Link>
           </div>
+
+          <div className="lg:hidden block md:mt-0 mt-1">
+            <MobileMenu
+              open={mobileOpen}
+              onOpenChange={setMobileOpen}
+              resourceLinks={resourceLinks}
+              programLinks={programLinks}
+            />
+          </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

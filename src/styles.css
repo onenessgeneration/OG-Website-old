@@ -31,8 +31,21 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --font-display: "Inter", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Poppins", "Inter", system-ui, sans-serif;
+  --font-sans: "Montserrat", "Inter", system-ui, sans-serif;
+  --font-heading: "Poppins", system-ui, sans-serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
+
+  /* Legacy palette from the old website (Tailwind v3 config) — exposed
+     as utilities: bg-tan, text-brown, bg-tanAccent, text-darkGreyBrown, etc. */
+  --color-tan: #f9f4ea;
+  --color-brown: #b78036;
+  --color-tanAccent: #cdad85;
+  --color-brightYellow: #fff300;
+  --color-brightIndigo: #6f00fe;
+  --color-darkGrey: #1b1d1e;
+  --color-darkGreyBrown: #605f4b;
+  --color-inputColor: #d5d5d5;
 }
 
 :root {
