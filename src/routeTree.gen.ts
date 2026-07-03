@@ -14,6 +14,7 @@ import { Route as SummerCampRouteImport } from './routes/summer-camp'
 import { Route as SoulSyncRouteImport } from './routes/soul-sync'
 import { Route as SfzRouteImport } from './routes/sfz'
 import { Route as SereneMindRouteImport } from './routes/serene-mind'
+import { Route as RequestSfzRouteImport } from './routes/request-sfz'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProgramsRouteImport } from './routes/programs'
 import { Route as OnenessYogaRouteImport } from './routes/oneness-yoga'
@@ -48,6 +49,11 @@ const SfzRoute = SfzRouteImport.update({
 const SereneMindRoute = SereneMindRouteImport.update({
   id: '/serene-mind',
   path: '/serene-mind',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RequestSfzRoute = RequestSfzRouteImport.update({
+  id: '/request-sfz',
+  path: '/request-sfz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/oneness-yoga': typeof OnenessYogaRoute
   '/programs': typeof ProgramsRoute
   '/register': typeof RegisterRoute
+  '/request-sfz': typeof RequestSfzRoute
   '/serene-mind': typeof SereneMindRoute
   '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/oneness-yoga': typeof OnenessYogaRoute
   '/programs': typeof ProgramsRoute
   '/register': typeof RegisterRoute
+  '/request-sfz': typeof RequestSfzRoute
   '/serene-mind': typeof SereneMindRoute
   '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/oneness-yoga': typeof OnenessYogaRoute
   '/programs': typeof ProgramsRoute
   '/register': typeof RegisterRoute
+  '/request-sfz': typeof RequestSfzRoute
   '/serene-mind': typeof SereneMindRoute
   '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/oneness-yoga'
     | '/programs'
     | '/register'
+    | '/request-sfz'
     | '/serene-mind'
     | '/sfz'
     | '/soul-sync'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/oneness-yoga'
     | '/programs'
     | '/register'
+    | '/request-sfz'
     | '/serene-mind'
     | '/sfz'
     | '/soul-sync'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/oneness-yoga'
     | '/programs'
     | '/register'
+    | '/request-sfz'
     | '/serene-mind'
     | '/sfz'
     | '/soul-sync'
@@ -218,6 +230,7 @@ export interface RootRouteChildren {
   OnenessYogaRoute: typeof OnenessYogaRoute
   ProgramsRoute: typeof ProgramsRoute
   RegisterRoute: typeof RegisterRoute
+  RequestSfzRoute: typeof RequestSfzRoute
   SereneMindRoute: typeof SereneMindRoute
   SfzRoute: typeof SfzRoute
   SoulSyncRoute: typeof SoulSyncRoute
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/serene-mind'
       fullPath: '/serene-mind'
       preLoaderRoute: typeof SereneMindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/request-sfz': {
+      id: '/request-sfz'
+      path: '/request-sfz'
+      fullPath: '/request-sfz'
+      preLoaderRoute: typeof RequestSfzRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -346,6 +366,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnenessYogaRoute: OnenessYogaRoute,
   ProgramsRoute: ProgramsRoute,
   RegisterRoute: RegisterRoute,
+  RequestSfzRoute: RequestSfzRoute,
   SereneMindRoute: SereneMindRoute,
   SfzRoute: SfzRoute,
   SoulSyncRoute: SoulSyncRoute,

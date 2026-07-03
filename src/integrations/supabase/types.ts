@@ -125,6 +125,93 @@ export type Database = {
         }
         Relationships: []
       }
+      sfz_events: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          end_at: string | null
+          event_name: string
+          event_short_description: string | null
+          event_type: string
+          id: string
+          location: string | null
+          location_type: string | null
+          published: boolean
+          start_at: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          end_at?: string | null
+          event_name: string
+          event_short_description?: string | null
+          event_type?: string
+          id?: string
+          location?: string | null
+          location_type?: string | null
+          published?: boolean
+          start_at: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          end_at?: string | null
+          event_name?: string
+          event_short_description?: string | null
+          event_type?: string
+          id?: string
+          location?: string | null
+          location_type?: string | null
+          published?: boolean
+          start_at?: string
+        }
+        Relationships: []
+      }
+      sfz_session_requests: {
+        Row: {
+          attendance_type: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+          created_at: string
+          date_requested: string
+          group_name: string
+          group_size: number
+          id: string
+          location: string | null
+          notes: string | null
+          preferred_time: string | null
+        }
+        Insert: {
+          attendance_type: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+          created_at?: string
+          date_requested: string
+          group_name: string
+          group_size: number
+          id?: string
+          location?: string | null
+          notes?: string | null
+          preferred_time?: string | null
+        }
+        Update: {
+          attendance_type?: string
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string
+          created_at?: string
+          date_requested?: string
+          group_name?: string
+          group_size?: number
+          id?: string
+          location?: string | null
+          notes?: string | null
+          preferred_time?: string | null
+        }
+        Relationships: []
+      }
       wallpapers: {
         Row: {
           created_at: string
