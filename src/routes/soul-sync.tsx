@@ -76,6 +76,16 @@ function SoulSyncVideoAndCards() {
   });
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 5]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
+
+  // One useTransform per pillar — fixed length, hook-rules safe.
+  const scale0 = useTransform(scrollYProgress, [0 * 0.25, 1], [1, 1 - (data.length - 0) * 0.05]);
+  const scale1 = useTransform(scrollYProgress, [1 * 0.25, 1], [1, 1 - (data.length - 1) * 0.05]);
+  const scale2 = useTransform(scrollYProgress, [2 * 0.25, 1], [1, 1 - (data.length - 2) * 0.05]);
+  const scale3 = useTransform(scrollYProgress, [3 * 0.25, 1], [1, 1 - (data.length - 3) * 0.05]);
+  const scale4 = useTransform(scrollYProgress, [4 * 0.25, 1], [1, 1 - (data.length - 4) * 0.05]);
+  const scale5 = useTransform(scrollYProgress, [5 * 0.25, 1], [1, 1 - (data.length - 5) * 0.05]);
+  const cardScales = [scale0, scale1, scale2, scale3, scale4, scale5];
 
   return (
     <div ref={container} className="relative">
@@ -97,7 +107,41 @@ function SoulSyncVideoAndCards() {
           <span className="italic text-black ml-4">Soul Sync!</span>
         </h1>
 
-        <div className="grid md:grid-cols-2 px-4 gap-10">
+        {/* Desktop: sticky-stacking cards that "collapse" as you scroll */}
+        <div className="xl:grid place-content-center p-2 hidden">
+          {data.map((item, index) => (
+            <motion.div
+              key={item.title}
+              style={{
+                scale: cardScales[index],
+                top: `calc(10vh + ${index * 25}px)`,
+                backgroundColor: item.color,
+              }}
+              className="border md:flex grid md:flex-col md:h-[500px] lg:w-[1000px] rounded-3xl md:p-12 p-4 sticky overflow-hidden"
+            >
+              <h2 className="text-3xl font-bold text-white">{item.title}</h2>
+              <div className="md:flex h-full w-full md:mt-12 mt-6 md:gap-12 gap-2">
+                <div className="relative md:w-1/2 md:top-[10%]">
+                  <h3 className="text-lg font-semibold text-white">{item.subtitle}</h3>
+                  <p className="text-tan mt-4">{item.text}</p>
+                </div>
+                <div className="relative md:w-1/2 h-full w-full rounded-3xl overflow-hidden">
+                  <motion.div className="w-full h-full" style={{ scale: imageScale }}>
+                    <ImagePlaceholder
+                      label={item.title}
+                      aspect="auto"
+                      rounded="rounded-3xl"
+                      className="w-full h-full border-0"
+                    />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Tablet / mobile fallback grid */}
+        <div className="grid md:grid-cols-2 xl:hidden px-4 gap-10">
           {data.map((item) => (
             <div
               key={item.title}
@@ -124,6 +168,7 @@ function SoulSyncVideoAndCards() {
     </div>
   );
 }
+
 
 function Heading() {
   return (
@@ -176,11 +221,12 @@ function Section() {
       <div className="fixed top-[-10vh] left-0 h-[120vh] w-full -z-0">
         <motion.div style={{ y }} className="relative w-full h-full">
           <ImagePlaceholder
-            label={undefined}
+            label=""
             aspect="auto"
             rounded="rounded-none"
             className="w-full h-full border-0"
           />
+
         </motion.div>
       </div>
     </div>
