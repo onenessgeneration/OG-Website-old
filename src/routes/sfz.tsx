@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import sfzVideoAsset from "@/assets/sfz/SFZ_Official_Video.mp4.asset.json";
-import Slider from "react-slick";
+import SliderModule from "react-slick";
 import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Clock,
   GraduationCap,
   Heart,
   MapPin,
@@ -18,6 +16,11 @@ import {
 } from "lucide-react";
 import { ImagePlaceholder } from "@/components/Placeholder";
 import { getSfzEvents } from "@/lib/sfz.functions";
+import { EventCard, type SfzEvent } from "@/components/sfz/EventCard";
+import { SfzVideo } from "@/components/sfz/SfzVideo";
+
+// react-slick ships as CJS; under Vite SSR the default may be wrapped.
+const Slider = ((SliderModule as unknown) as { default?: typeof SliderModule }).default ?? SliderModule;
 
 export const Route = createFileRoute("/sfz")({
   head: () => ({
@@ -220,14 +223,15 @@ function Structure() {
 
         <div className="w-1/2 sticky top-0 h-screen flex items-center justify-center">
           <div className="relative w-[400px] h-[600px] rounded-xl overflow-hidden shadow-2xl border border-gray-200">
-            <video src={sfzVideoAsset.url} controls playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover" />
+            <SfzVideo />
+
           </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-8 lg:hidden">
         <div className="relative w-full h-64 rounded-xl overflow-hidden shadow-lg border border-gray-200">
-          <video src={sfzVideoAsset.url} controls playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover" />
+          <SfzVideo />
         </div>
         {modules.map((section, index) => (
           <div key={section.id} className="flex flex-col gap-4">
@@ -437,76 +441,51 @@ function Partnership() {
   );
 }
 
-type SfzEvent = {
-  id: string;
-  event_name: string;
-  event_short_description: string | null;
-  cover_url: string | null;
-  location: string | null;
-  location_type: string | null;
-  start_at: string;
-  end_at: string | null;
-};
-
-function formatTime(iso: string | null) {
-  if (!iso) return "";
-  return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-}
-
-function EventCard({ e }: { e: SfzEvent }) {
-  return (
-    <div className="bg-white rounded-2xl border border-border shadow-card overflow-hidden flex flex-col">
-      {e.cover_url ? (
-        <img src={e.cover_url} alt={e.event_name} className="w-full h-48 object-cover" />
-      ) : (
-        <ImagePlaceholder label="Event" aspect="16/9" rounded="rounded-none" className="w-full" />
-      )}
-      <div className="p-5 flex flex-col gap-3 flex-grow">
-        <h3 className="md:text-lg font-bold text-gray-800 line-clamp-2">{e.event_name}</h3>
-        {e.event_short_description && (
-          <p className="text-gray-600 text-sm line-clamp-3 flex-grow">{e.event_short_description}</p>
-        )}
-        <div className="flex items-center justify-between text-sm text-gray-600 gap-3 flex-wrap">
-          <p className="flex gap-2 items-center">
-            <MapPin className="text-brown w-4 h-4" />
-            {e.location || e.location_type || "TBD"}
-          </p>
-          <p className="flex gap-2 items-center">
-            <Clock className="text-brown w-4 h-4" />
-            {formatTime(e.start_at)}
-            {e.end_at ? ` – ${formatTime(e.end_at)}` : ""}
-          </p>
-        </div>
-        <div className="mt-auto pt-2">
-          <span className="inline-flex items-center gap-2 bg-brown text-white px-4 py-2 rounded-full text-sm">
-            View <ArrowUpRight className="w-4 h-4" />
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function EventsSection({ title, type, band }: { title: string; type: "upcoming" | "past"; band: string }) {
+function EventsSection({
+  title,
+  type,
+  band,
+  exploreHref,
+  emptyLabel,
+}: {
+  title: string;
+  type: "upcoming" | "past";
+  band: string;
+  exploreHref: string;
+  emptyLabel: string;
+}) {
   const [events, setEvents] = useState<SfzEvent[]>([]);
   useEffect(() => {
     let alive = true;
     getSfzEvents({ data: { type } })
-      .then((rows) => { if (alive) setEvents(rows as SfzEvent[]); })
-      .catch(() => { if (alive) setEvents([]); });
-    return () => { alive = false; };
+      .then((rows) => {
+        if (alive) setEvents(rows as SfzEvent[]);
+      })
+      .catch(() => {
+        if (alive) setEvents([]);
+      });
+    return () => {
+      alive = false;
+    };
   }, [type]);
-
 
   return (
     <section className={`${band} py-14`}>
       <div className="container mx-auto max-w-7xl px-5">
-        <h2 className="text-center md:text-4xl text-2xl font-bold text-tanAccent mb-10">{title}</h2>
+        <div className="flex items-center justify-between mb-10 gap-4 flex-wrap">
+          <h2 className="md:text-4xl text-2xl font-bold text-darkGreyBrown">{title}</h2>
+          <Link
+            to={exploreHref}
+            className="inline-flex items-center gap-2 bg-brown text-white px-5 py-2 rounded-full hover:bg-yellow-800 transition"
+          >
+            Explore All <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </div>
         {events.length === 0 ? (
-          <p className="text-center text-gray-500">No {type} events at the moment. Check back soon.</p>
+          <p className="text-center text-brown py-16">{emptyLabel}</p>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {(events as SfzEvent[]).map((e) => (
+            {events.map((e) => (
               <EventCard key={e.id} e={e} />
             ))}
           </div>
@@ -515,6 +494,7 @@ function EventsSection({ title, type, band }: { title: string; type: "upcoming" 
     </section>
   );
 }
+
 
 function SfzPage() {
   return (
@@ -525,8 +505,20 @@ function SfzPage() {
       <Tools />
       <OurTeam />
       <Partnership />
-      <EventsSection title="SFZ Upcoming Events" type="upcoming" band="bg-band-cream" />
-      <EventsSection title="SFZ Past Events" type="past" band="bg-white" />
+      <EventsSection
+        title="SFZ Upcoming Events"
+        type="upcoming"
+        band="bg-band-cream"
+        exploreHref="/allUpcoming-sfz-events"
+        emptyLabel="Currently No Upcoming Events"
+      />
+      <EventsSection
+        title="SFZ Past Events"
+        type="past"
+        band="bg-white"
+        exploreHref="/allPast-sfz-events"
+        emptyLabel="Currently No Past Events"
+      />
     </>
   );
 }

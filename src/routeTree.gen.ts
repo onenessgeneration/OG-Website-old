@@ -23,6 +23,8 @@ import { Route as GetInvolvedRouteImport } from './routes/get-involved'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AllUpcomingSfzEventsRouteImport } from './routes/allUpcoming-sfz-events'
+import { Route as AllPastSfzEventsRouteImport } from './routes/allPast-sfz-events'
 import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -96,6 +98,16 @@ const BlogRoute = BlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AllUpcomingSfzEventsRoute = AllUpcomingSfzEventsRouteImport.update({
+  id: '/allUpcoming-sfz-events',
+  path: '/allUpcoming-sfz-events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AllPastSfzEventsRoute = AllPastSfzEventsRouteImport.update({
+  id: '/allPast-sfz-events',
+  path: '/allPast-sfz-events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutUsRoute = AboutUsRouteImport.update({
   id: '/about-us',
   path: '/about-us',
@@ -110,6 +122,8 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/allPast-sfz-events': typeof AllPastSfzEventsRoute
+  '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/gallery': typeof GalleryRoute
@@ -128,6 +142,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/allPast-sfz-events': typeof AllPastSfzEventsRoute
+  '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/gallery': typeof GalleryRoute
@@ -147,6 +163,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/allPast-sfz-events': typeof AllPastSfzEventsRoute
+  '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
   '/gallery': typeof GalleryRoute
@@ -167,6 +185,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about-us'
+    | '/allPast-sfz-events'
+    | '/allUpcoming-sfz-events'
     | '/blog'
     | '/contact-us'
     | '/gallery'
@@ -185,6 +205,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about-us'
+    | '/allPast-sfz-events'
+    | '/allUpcoming-sfz-events'
     | '/blog'
     | '/contact-us'
     | '/gallery'
@@ -203,6 +225,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about-us'
+    | '/allPast-sfz-events'
+    | '/allUpcoming-sfz-events'
     | '/blog'
     | '/contact-us'
     | '/gallery'
@@ -222,6 +246,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutUsRoute: typeof AboutUsRoute
+  AllPastSfzEventsRoute: typeof AllPastSfzEventsRoute
+  AllUpcomingSfzEventsRoute: typeof AllUpcomingSfzEventsRoute
   BlogRoute: typeof BlogRoute
   ContactUsRoute: typeof ContactUsRoute
   GalleryRoute: typeof GalleryRoute
@@ -338,6 +364,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/allUpcoming-sfz-events': {
+      id: '/allUpcoming-sfz-events'
+      path: '/allUpcoming-sfz-events'
+      fullPath: '/allUpcoming-sfz-events'
+      preLoaderRoute: typeof AllUpcomingSfzEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/allPast-sfz-events': {
+      id: '/allPast-sfz-events'
+      path: '/allPast-sfz-events'
+      fullPath: '/allPast-sfz-events'
+      preLoaderRoute: typeof AllPastSfzEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about-us': {
       id: '/about-us'
       path: '/about-us'
@@ -358,6 +398,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutUsRoute: AboutUsRoute,
+  AllPastSfzEventsRoute: AllPastSfzEventsRoute,
+  AllUpcomingSfzEventsRoute: AllUpcomingSfzEventsRoute,
   BlogRoute: BlogRoute,
   ContactUsRoute: ContactUsRoute,
   GalleryRoute: GalleryRoute,
