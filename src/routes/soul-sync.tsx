@@ -221,11 +221,12 @@ function Section() {
       <div className="fixed top-[-10vh] left-0 h-[120vh] w-full -z-0">
         <motion.div style={{ y }} className="relative w-full h-full">
           <ImagePlaceholder
-            label={undefined}
+            label=""
             aspect="auto"
             rounded="rounded-none"
             className="w-full h-full border-0"
           />
+
         </motion.div>
       </div>
     </div>
