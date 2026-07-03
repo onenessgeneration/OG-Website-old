@@ -14,6 +14,7 @@ import { Route as SummerCampRouteImport } from './routes/summer-camp'
 import { Route as SoulSyncRouteImport } from './routes/soul-sync'
 import { Route as SfzRouteImport } from './routes/sfz'
 import { Route as SereneMindRouteImport } from './routes/serene-mind'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RequestSfzRouteImport } from './routes/request-sfz'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProgramsRouteImport } from './routes/programs'
@@ -21,6 +22,7 @@ import { Route as OnenessYogaRouteImport } from './routes/oneness-yoga'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GetInvolvedRouteImport } from './routes/get-involved'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AllUpcomingSfzEventsRouteImport } from './routes/allUpcoming-sfz-events'
@@ -51,6 +53,11 @@ const SfzRoute = SfzRouteImport.update({
 const SereneMindRoute = SereneMindRouteImport.update({
   id: '/serene-mind',
   path: '/serene-mind',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RequestSfzRoute = RequestSfzRouteImport.update({
@@ -86,6 +93,11 @@ const GetInvolvedRoute = GetInvolvedRouteImport.update({
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactUsRoute = ContactUsRouteImport.update({
@@ -126,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/get-involved': typeof GetInvolvedRoute
   '/login': typeof LoginRoute
@@ -133,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/programs': typeof ProgramsRoute
   '/register': typeof RegisterRoute
   '/request-sfz': typeof RequestSfzRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/serene-mind': typeof SereneMindRoute
   '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
@@ -146,6 +160,7 @@ export interface FileRoutesByTo {
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/get-involved': typeof GetInvolvedRoute
   '/login': typeof LoginRoute
@@ -153,6 +168,7 @@ export interface FileRoutesByTo {
   '/programs': typeof ProgramsRoute
   '/register': typeof RegisterRoute
   '/request-sfz': typeof RequestSfzRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/serene-mind': typeof SereneMindRoute
   '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
@@ -167,6 +183,7 @@ export interface FileRoutesById {
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
   '/contact-us': typeof ContactUsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/get-involved': typeof GetInvolvedRoute
   '/login': typeof LoginRoute
@@ -174,6 +191,7 @@ export interface FileRoutesById {
   '/programs': typeof ProgramsRoute
   '/register': typeof RegisterRoute
   '/request-sfz': typeof RequestSfzRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/serene-mind': typeof SereneMindRoute
   '/sfz': typeof SfzRoute
   '/soul-sync': typeof SoulSyncRoute
@@ -189,6 +207,7 @@ export interface FileRouteTypes {
     | '/allUpcoming-sfz-events'
     | '/blog'
     | '/contact-us'
+    | '/forgot-password'
     | '/gallery'
     | '/get-involved'
     | '/login'
@@ -196,6 +215,7 @@ export interface FileRouteTypes {
     | '/programs'
     | '/register'
     | '/request-sfz'
+    | '/reset-password'
     | '/serene-mind'
     | '/sfz'
     | '/soul-sync'
@@ -209,6 +229,7 @@ export interface FileRouteTypes {
     | '/allUpcoming-sfz-events'
     | '/blog'
     | '/contact-us'
+    | '/forgot-password'
     | '/gallery'
     | '/get-involved'
     | '/login'
@@ -216,6 +237,7 @@ export interface FileRouteTypes {
     | '/programs'
     | '/register'
     | '/request-sfz'
+    | '/reset-password'
     | '/serene-mind'
     | '/sfz'
     | '/soul-sync'
@@ -229,6 +251,7 @@ export interface FileRouteTypes {
     | '/allUpcoming-sfz-events'
     | '/blog'
     | '/contact-us'
+    | '/forgot-password'
     | '/gallery'
     | '/get-involved'
     | '/login'
@@ -236,6 +259,7 @@ export interface FileRouteTypes {
     | '/programs'
     | '/register'
     | '/request-sfz'
+    | '/reset-password'
     | '/serene-mind'
     | '/sfz'
     | '/soul-sync'
@@ -250,6 +274,7 @@ export interface RootRouteChildren {
   AllUpcomingSfzEventsRoute: typeof AllUpcomingSfzEventsRoute
   BlogRoute: typeof BlogRoute
   ContactUsRoute: typeof ContactUsRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   GalleryRoute: typeof GalleryRoute
   GetInvolvedRoute: typeof GetInvolvedRoute
   LoginRoute: typeof LoginRoute
@@ -257,6 +282,7 @@ export interface RootRouteChildren {
   ProgramsRoute: typeof ProgramsRoute
   RegisterRoute: typeof RegisterRoute
   RequestSfzRoute: typeof RequestSfzRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SereneMindRoute: typeof SereneMindRoute
   SfzRoute: typeof SfzRoute
   SoulSyncRoute: typeof SoulSyncRoute
@@ -299,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/serene-mind'
       fullPath: '/serene-mind'
       preLoaderRoute: typeof SereneMindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/request-sfz': {
@@ -348,6 +381,13 @@ declare module '@tanstack/react-router' {
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact-us': {
@@ -402,6 +442,7 @@ const rootRouteChildren: RootRouteChildren = {
   AllUpcomingSfzEventsRoute: AllUpcomingSfzEventsRoute,
   BlogRoute: BlogRoute,
   ContactUsRoute: ContactUsRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   GalleryRoute: GalleryRoute,
   GetInvolvedRoute: GetInvolvedRoute,
   LoginRoute: LoginRoute,
@@ -409,6 +450,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgramsRoute: ProgramsRoute,
   RegisterRoute: RegisterRoute,
   RequestSfzRoute: RequestSfzRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SereneMindRoute: SereneMindRoute,
   SfzRoute: SfzRoute,
   SoulSyncRoute: SoulSyncRoute,

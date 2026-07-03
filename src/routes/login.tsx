@@ -88,6 +88,15 @@ function LoginPage() {
 
               {serverError && <small className="text-red-500">{serverError}</small>}
 
+              <div className="text-right -mt-2">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-brown font-medium underline underline-offset-4 hover:text-darkGreyBrown"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
