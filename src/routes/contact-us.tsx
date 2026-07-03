@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ImagePlaceholder } from "@/components/Placeholder";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -9,52 +9,105 @@ export const Route = createFileRoute("/contact-us")({
     meta: [
       { title: "Contact Us — Oneness Generation" },
       { name: "description", content: "Let's connect — reach out to the Oneness Generation team." },
+      { property: "og:title", content: "Contact Us — Oneness Generation" },
+      { property: "og:description", content: "Let's connect — reach out to the Oneness Generation team." },
     ],
   }),
   component: ContactPage,
 });
 
+const CONTACT_IMG =
+  "https://res.cloudinary.com/drxwnjtcn/image/upload/v1749203630/Oneness-Generation/Summer%20Camp%20Events/_DSC9402_hj84tx.jpg";
+
 function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const { error } = await supabase.from("contact_messages").insert(form);
+    const { error } = await supabase.from("contact_messages").insert({
+      name: form.name,
+      email: form.email,
+      message: form.message,
+    });
     setSubmitting(false);
-    if (error) toast.error("Could not send message. Please try again.");
+    if (error) toast.error("Failed to send the message.");
     else {
-      toast.success("Thanks for reaching out — we'll be in touch soon.");
-      setForm({ name: "", email: "", subject: "", message: "" });
+      toast.success("Message sent successfully!");
+      setForm({ name: "", email: "", message: "" });
     }
   };
 
+  const Overlay = (
+    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-xl md:text-center flex flex-col justify-center items-center p-6">
+      <h1 className="md:text-2xl font-bold text-white uppercase md:mb-5">Let's Connect</h1>
+      <div className="w-fit text-white space-y-1 md:space-y-2">
+        <p className="text-[13px] md:text-lg font-semibold">OG WhatsApp Number: +91 70950 01991</p>
+        <p className="text-[13px] md:text-lg font-semibold">OG Email: hello@onenessgeneration.org</p>
+      </div>
+    </div>
+  );
+
   return (
-    <>
-      <section className="relative">
-        <ImagePlaceholder label="Contact Us" aspect="21/9" rounded="rounded-none" />
-      </section>
+    <div className="flex items-center justify-center md:px-12 px-4 bg-gray-100 md:py-16 py-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="grid w-full gap-6 p-2 md:p-8 md:gap-10"
+      >
+        <div className="lg:flex items-center lg:gap-10 lg:space-y-0 space-y-5">
+          <div className="relative w-full lg:w-1/2 h-96 md:h-[410px] lg:block hidden">
+            <img src={CONTACT_IMG} alt="Contact Us" className="w-full h-full object-cover rounded-xl" />
+            {Overlay}
+          </div>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 grid md:grid-cols-2 gap-12 items-start">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gradient mb-6">Let's Connect</h1>
-          <p className="text-muted-foreground mb-3">OG WhatsApp Number: <a href="tel:+917095001991" className="text-primary font-semibold">+91 70950 01991</a></p>
-          <p className="text-muted-foreground mb-8">OG Email: <a href="mailto:hello@onenessgeneration.org" className="text-primary font-semibold">hello@onenessgeneration.org</a></p>
-          <ImagePlaceholder label="Our Community" aspect="4/3" />
+          <form
+            onSubmit={submit}
+            className="space-y-5 grid lg:w-1/2 w-full rounded-xl shadow-md border bg-white border-gray-200 md:p-7 p-3"
+          >
+            <h2 className="font-bold md:text-2xl uppercase">Contact</h2>
+            <input
+              required
+              type="text"
+              placeholder="Name *"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="w-full p-2 border-b-2 focus:outline-none"
+            />
+            <input
+              required
+              type="email"
+              placeholder="Email *"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className="w-full p-2 border-b-2 focus:outline-none"
+            />
+            <textarea
+              required
+              rows={3}
+              placeholder="Message *"
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              maxLength={250}
+              className="w-full p-2 border-b-2 resize-none focus:outline-none"
+            />
+            <motion.button
+              type="submit"
+              disabled={submitting}
+              className={`bg-brown hover:bg-tanAccent text-white justify-self-center py-3 w-fit px-5 rounded-lg font-semibold mt-4 ${submitting ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
+              {submitting ? "Submitting..." : "Submit"}
+            </motion.button>
+          </form>
+
+          <div className="relative w-full lg:w-1/2 h-96 lg:hidden block">
+            <img src={CONTACT_IMG} alt="Contact Us" className="w-full h-full object-cover rounded-xl" />
+            {Overlay}
+          </div>
         </div>
-
-        <form onSubmit={submit} className="bg-card p-8 rounded-2xl border border-border shadow-card space-y-4">
-          <h2 className="text-2xl font-bold mb-2">Contact</h2>
-          <input required placeholder="Your Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full rounded-md border border-input bg-background px-4 py-2.5" />
-          <input required type="email" placeholder="Your Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-md border border-input bg-background px-4 py-2.5" />
-          <input placeholder="Subject" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="w-full rounded-md border border-input bg-background px-4 py-2.5" />
-          <textarea required rows={5} placeholder="Your Message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full rounded-md border border-input bg-background px-4 py-2.5" />
-          <button disabled={submitting} className="w-full bg-primary text-primary-foreground rounded-full py-3 font-semibold hover:bg-primary-glow transition disabled:opacity-50">
-            {submitting ? "Submitting…" : "Submit"}
-          </button>
-        </form>
-      </section>
-    </>
+      </motion.div>
+    </div>
   );
 }
