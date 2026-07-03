@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import sfzVideoAsset from "@/assets/sfz/SFZ_Official_Video.mp4.asset.json";
 import Slider from "react-slick";
 import {
   ArrowUpRight,
@@ -16,7 +16,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import { ImagePlaceholder, VideoPlaceholder } from "@/components/Placeholder";
+import { ImagePlaceholder } from "@/components/Placeholder";
 import { getSfzEvents } from "@/lib/sfz.functions";
 
 export const Route = createFileRoute("/sfz")({
