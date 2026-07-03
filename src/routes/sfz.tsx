@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import sfzVideoAsset from "@/assets/sfz/SFZ_Official_Video.mp4.asset.json";
-import Slider from "react-slick";
+import SliderModule from "react-slick";
 import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Clock,
   GraduationCap,
   Heart,
   MapPin,
@@ -18,8 +16,23 @@ import {
 } from "lucide-react";
 import { ImagePlaceholder } from "@/components/Placeholder";
 import { getSfzEvents } from "@/lib/sfz.functions";
+import { EventCard, type SfzEvent } from "@/components/sfz/EventCard";
+import { SfzVideo } from "@/components/sfz/SfzVideo";
+
+// react-slick ships as CJS; under Vite SSR the default may be wrapped.
+const Slider = ((SliderModule as unknown) as { default?: typeof SliderModule }).default ?? SliderModule;
 
 export const Route = createFileRoute("/sfz")({
+  head: () => ({
+    meta: [
+      { title: "Stress Free Zone (SFZ) — Oneness Generation" },
+      { name: "description", content: "Master your state, master your life with the SFZ program." },
+      { property: "og:title", content: "Stress Free Zone (SFZ) — Oneness Generation" },
+      { property: "og:description", content: "Master your state, master your life with the SFZ program." },
+    ],
+  }),
+  component: SfzPage,
+});
   head: () => ({
     meta: [
       { title: "Stress Free Zone (SFZ) — Oneness Generation" },
