@@ -13,24 +13,30 @@ function serverSupabase() {
   );
 }
 
+async function queryEvents(type: "upcoming" | "past", limit: number) {
+  const supabase = serverSupabase();
+  const nowIso = new Date().toISOString();
+  let query = supabase
+    .from("sfz_events")
+    .select("id, event_name, event_short_description, cover_url, location, location_type, start_at, end_at")
+    .eq("published", true);
+  if (type === "upcoming") {
+    query = query.gte("start_at", nowIso).order("start_at", { ascending: true });
+  } else {
+    query = query.lt("start_at", nowIso).order("start_at", { ascending: false });
+  }
+  const { data: rows, error } = await query.limit(limit);
+  if (error) return [];
+  return rows ?? [];
+}
+
 export const getSfzEvents = createServerFn({ method: "GET" })
   .inputValidator((input) => z.object({ type: z.enum(["upcoming", "past"]) }).parse(input))
-  .handler(async ({ data }) => {
-    const supabase = serverSupabase();
-    const nowIso = new Date().toISOString();
-    let query = supabase
-      .from("sfz_events")
-      .select("id, event_name, event_short_description, cover_url, location, location_type, start_at, end_at")
-      .eq("published", true);
-    if (data.type === "upcoming") {
-      query = query.gte("start_at", nowIso).order("start_at", { ascending: true });
-    } else {
-      query = query.lt("start_at", nowIso).order("start_at", { ascending: false });
-    }
-    const { data: rows, error } = await query.limit(12);
-    if (error) return [];
-    return rows ?? [];
-  });
+  .handler(async ({ data }) => queryEvents(data.type, 3));
+
+export const getAllSfzEvents = createServerFn({ method: "GET" })
+  .inputValidator((input) => z.object({ type: z.enum(["upcoming", "past"]) }).parse(input))
+  .handler(async ({ data }) => queryEvents(data.type, 100));
 
 const requestSchema = z.object({
   group_name: z.string().trim().min(1).max(200),
