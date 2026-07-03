@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
+import { BackButton } from "@/components/BackButton";
 import { EventCard, type SfzEvent } from "@/components/sfz/EventCard";
 import { getAllSfzEvents } from "@/lib/sfz.functions";
 
@@ -54,6 +55,9 @@ export function EventsListPage({ type, title }: { type: "upcoming" | "past"; tit
       <PageHero title={title} subtitle="Search and filter to find the session that fits you." />
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-5">
+          <div className="mb-6">
+            <BackButton fallbackTo="/sfz" label="Back to SFZ" />
+          </div>
           <div className="flex flex-wrap gap-4 mb-8">
             <div className="relative flex-1 min-w-[240px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />

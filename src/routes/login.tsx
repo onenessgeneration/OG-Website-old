@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -17,36 +18,87 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setServerError("");
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Welcome back!");
+    if (error) {
+      setServerError("Invalid Credentials");
+      toast.error(error.message);
+    } else {
+      toast.success("Login successfully");
       navigate({ to: "/" });
     }
   };
 
   return (
-    <section className="min-h-[70vh] flex items-center justify-center bg-soft-gradient px-4 py-16">
-      <div className="w-full max-w-md bg-card p-8 rounded-2xl shadow-soft border border-border">
-        <h1 className="text-3xl font-bold text-gradient mb-2 text-center">Welcome Back</h1>
-        <p className="text-muted-foreground text-sm text-center mb-6">Log in to your Oneness Generation account.</p>
-        <form onSubmit={submit} className="space-y-4">
-          <input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-md border border-input bg-background px-4 py-2.5" />
-          <input required type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-md border border-input bg-background px-4 py-2.5" />
-          <button disabled={loading} className="w-full bg-primary text-primary-foreground rounded-full py-3 font-semibold hover:bg-primary-glow transition disabled:opacity-50">
-            {loading ? "Logging in…" : "Log In"}
-          </button>
-        </form>
-        <p className="mt-6 text-sm text-center text-muted-foreground">
-          Don't have an account? <Link to="/register" className="text-primary font-semibold hover:underline">Register</Link>
-        </p>
+    <div className="xl:px-[450px] sm:px-20 py-10">
+      <div className="flex items-center justify-center mx-auto container px-5 max-w-xl">
+        <div className="md:flex md:justify-center md:items-center w-full">
+          <div className="w-full md:p-3 p-2 lg:rounded-xl md:space-y-5 space-y-2">
+            <div className="grid place-content-center place-items-center mb-4">
+              <h2 className="text-darkGreyBrown text-3xl font-semibold">Login</h2>
+              <p className="flex items-center gap-3">
+                Don't have an account?
+                <Link to="/register" className="font-semibold text-brown underline underline-offset-4">
+                  Register
+                </Link>
+              </p>
+            </div>
+
+            <form onSubmit={submit} className="grid grid-cols-1 space-y-4">
+              <div className="grid space-y-1">
+                <label className="px-1">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="rounded-xl lowercase border border-[#605f5f] sm:py-3 p-2 px-3 w-full"
+                />
+              </div>
+
+              <div className="grid space-y-1">
+                <label className="px-1">Password</label>
+                <div className="relative w-full">
+                  <input
+                    type={show ? "text" : "password"}
+                    required
+                    minLength={6}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="rounded-xl border border-[#605f5f] sm:py-3 p-2 px-3 w-full pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShow((s) => !s)}
+                    className="absolute text-xl top-1/2 -translate-y-1/2 right-3 text-darkGreyBrown"
+                    aria-label={show ? "Hide password" : "Show password"}
+                  >
+                    {show ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+
+              {serverError && <small className="text-red-500">{serverError}</small>}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="p-2 px-4 font-medium bg-darkGreyBrown text-tan rounded-xl text-xl disabled:opacity-50"
+              >
+                {loading ? "Logging..." : "Login"}
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
