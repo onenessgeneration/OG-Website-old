@@ -505,8 +505,20 @@ function SfzPage() {
       <Tools />
       <OurTeam />
       <Partnership />
-      <EventsSection title="SFZ Upcoming Events" type="upcoming" band="bg-band-cream" />
-      <EventsSection title="SFZ Past Events" type="past" band="bg-white" />
+      <EventsSection
+        title="SFZ Upcoming Events"
+        type="upcoming"
+        band="bg-band-cream"
+        exploreHref="/allUpcoming-sfz-events"
+        emptyLabel="Currently No Upcoming Events"
+      />
+      <EventsSection
+        title="SFZ Past Events"
+        type="past"
+        band="bg-white"
+        exploreHref="/allPast-sfz-events"
+        emptyLabel="Currently No Past Events"
+      />
     </>
   );
 }
