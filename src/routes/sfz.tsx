@@ -441,76 +441,51 @@ function Partnership() {
   );
 }
 
-type SfzEvent = {
-  id: string;
-  event_name: string;
-  event_short_description: string | null;
-  cover_url: string | null;
-  location: string | null;
-  location_type: string | null;
-  start_at: string;
-  end_at: string | null;
-};
-
-function formatTime(iso: string | null) {
-  if (!iso) return "";
-  return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-}
-
-function EventCard({ e }: { e: SfzEvent }) {
-  return (
-    <div className="bg-white rounded-2xl border border-border shadow-card overflow-hidden flex flex-col">
-      {e.cover_url ? (
-        <img src={e.cover_url} alt={e.event_name} className="w-full h-48 object-cover" />
-      ) : (
-        <ImagePlaceholder label="Event" aspect="16/9" rounded="rounded-none" className="w-full" />
-      )}
-      <div className="p-5 flex flex-col gap-3 flex-grow">
-        <h3 className="md:text-lg font-bold text-gray-800 line-clamp-2">{e.event_name}</h3>
-        {e.event_short_description && (
-          <p className="text-gray-600 text-sm line-clamp-3 flex-grow">{e.event_short_description}</p>
-        )}
-        <div className="flex items-center justify-between text-sm text-gray-600 gap-3 flex-wrap">
-          <p className="flex gap-2 items-center">
-            <MapPin className="text-brown w-4 h-4" />
-            {e.location || e.location_type || "TBD"}
-          </p>
-          <p className="flex gap-2 items-center">
-            <Clock className="text-brown w-4 h-4" />
-            {formatTime(e.start_at)}
-            {e.end_at ? ` – ${formatTime(e.end_at)}` : ""}
-          </p>
-        </div>
-        <div className="mt-auto pt-2">
-          <span className="inline-flex items-center gap-2 bg-brown text-white px-4 py-2 rounded-full text-sm">
-            View <ArrowUpRight className="w-4 h-4" />
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function EventsSection({ title, type, band }: { title: string; type: "upcoming" | "past"; band: string }) {
+function EventsSection({
+  title,
+  type,
+  band,
+  exploreHref,
+  emptyLabel,
+}: {
+  title: string;
+  type: "upcoming" | "past";
+  band: string;
+  exploreHref: string;
+  emptyLabel: string;
+}) {
   const [events, setEvents] = useState<SfzEvent[]>([]);
   useEffect(() => {
     let alive = true;
     getSfzEvents({ data: { type } })
-      .then((rows) => { if (alive) setEvents(rows as SfzEvent[]); })
-      .catch(() => { if (alive) setEvents([]); });
-    return () => { alive = false; };
+      .then((rows) => {
+        if (alive) setEvents(rows as SfzEvent[]);
+      })
+      .catch(() => {
+        if (alive) setEvents([]);
+      });
+    return () => {
+      alive = false;
+    };
   }, [type]);
-
 
   return (
     <section className={`${band} py-14`}>
       <div className="container mx-auto max-w-7xl px-5">
-        <h2 className="text-center md:text-4xl text-2xl font-bold text-tanAccent mb-10">{title}</h2>
+        <div className="flex items-center justify-between mb-10 gap-4 flex-wrap">
+          <h2 className="md:text-4xl text-2xl font-bold text-darkGreyBrown">{title}</h2>
+          <Link
+            to={exploreHref}
+            className="inline-flex items-center gap-2 bg-brown text-white px-5 py-2 rounded-full hover:bg-yellow-800 transition"
+          >
+            Explore All <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </div>
         {events.length === 0 ? (
-          <p className="text-center text-gray-500">No {type} events at the moment. Check back soon.</p>
+          <p className="text-center text-brown py-16">{emptyLabel}</p>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {(events as SfzEvent[]).map((e) => (
+            {events.map((e) => (
               <EventCard key={e.id} e={e} />
             ))}
           </div>
@@ -519,6 +494,7 @@ function EventsSection({ title, type, band }: { title: string; type: "upcoming" 
     </section>
   );
 }
+
 
 function SfzPage() {
   return (
