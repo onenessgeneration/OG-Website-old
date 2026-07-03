@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import sfzVideoAsset from "@/assets/sfz/SFZ_Official_Video.mp4.asset.json";
 import Slider from "react-slick";
 import {
   ArrowUpRight,
@@ -16,7 +16,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import { ImagePlaceholder, VideoPlaceholder } from "@/components/Placeholder";
+import { ImagePlaceholder } from "@/components/Placeholder";
 import { getSfzEvents } from "@/lib/sfz.functions";
 
 export const Route = createFileRoute("/sfz")({
@@ -220,14 +220,14 @@ function Structure() {
 
         <div className="w-1/2 sticky top-0 h-screen flex items-center justify-center">
           <div className="relative w-[400px] h-[600px] rounded-xl overflow-hidden shadow-2xl border border-gray-200">
-            <VideoPlaceholder label="SFZ" aspect="2/3" rounded="rounded-xl" className="absolute inset-0 w-full h-full" />
+            <video src={sfzVideoAsset.url} controls playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover" />
           </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-8 lg:hidden">
         <div className="relative w-full h-64 rounded-xl overflow-hidden shadow-lg border border-gray-200">
-          <VideoPlaceholder label="SFZ" aspect="16/9" rounded="rounded-xl" className="absolute inset-0 w-full h-full" />
+          <video src={sfzVideoAsset.url} controls playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover" />
         </div>
         {modules.map((section, index) => (
           <div key={section.id} className="flex flex-col gap-4">
@@ -488,10 +488,15 @@ function EventCard({ e }: { e: SfzEvent }) {
 }
 
 function EventsSection({ title, type, band }: { title: string; type: "upcoming" | "past"; band: string }) {
-  const { data: events = [] } = useQuery({
-    queryKey: ["sfz-events", type],
-    queryFn: () => getSfzEvents({ data: { type } }),
-  });
+  const [events, setEvents] = useState<SfzEvent[]>([]);
+  useEffect(() => {
+    let alive = true;
+    getSfzEvents({ data: { type } })
+      .then((rows) => { if (alive) setEvents(rows as SfzEvent[]); })
+      .catch(() => { if (alive) setEvents([]); });
+    return () => { alive = false; };
+  }, [type]);
+
 
   return (
     <section className={`${band} py-14`}>
