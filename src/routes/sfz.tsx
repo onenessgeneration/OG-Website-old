@@ -33,16 +33,6 @@ export const Route = createFileRoute("/sfz")({
   }),
   component: SfzPage,
 });
-  head: () => ({
-    meta: [
-      { title: "Stress Free Zone (SFZ) — Oneness Generation" },
-      { name: "description", content: "Master your state, master your life with the SFZ program." },
-      { property: "og:title", content: "Stress Free Zone (SFZ) — Oneness Generation" },
-      { property: "og:description", content: "Master your state, master your life with the SFZ program." },
-    ],
-  }),
-  component: SfzPage,
-});
 
 function SFZBanner() {
   return (
