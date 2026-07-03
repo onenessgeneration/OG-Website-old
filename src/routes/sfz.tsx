@@ -223,14 +223,15 @@ function Structure() {
 
         <div className="w-1/2 sticky top-0 h-screen flex items-center justify-center">
           <div className="relative w-[400px] h-[600px] rounded-xl overflow-hidden shadow-2xl border border-gray-200">
-            <video src={sfzVideoAsset.url} controls playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover" />
+            <SfzVideo />
+
           </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-8 lg:hidden">
         <div className="relative w-full h-64 rounded-xl overflow-hidden shadow-lg border border-gray-200">
-          <video src={sfzVideoAsset.url} controls playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover" />
+          <SfzVideo />
         </div>
         {modules.map((section, index) => (
           <div key={section.id} className="flex flex-col gap-4">
