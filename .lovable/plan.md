@@ -1,99 +1,50 @@
-## SFZ page — remaining sections
+## SFZ Events polish + full-list pages
 
-### 1. Icons (Lucide)
+### 1. Video: autoplay muted, click to unmute
+In `src/routes/sfz.tsx`, replace both `<video>` tags with a small `SfzVideo` component:
+- `autoPlay muted loop playsInline` attributes so it plays silently on load (required for browser autoplay policy).
+- Local `muted` state; clicking the video toggles `muted` (unmute on first click, re-mute on second). Keep native `controls` off to match the original look, but expose a small speaker icon (Volume2 / VolumeX from lucide) in the corner as the affordance. Cursor set to pointer.
 
-Replace placeholder circles in `WhyChooseSFZ` and `Tools`:
+### 2. Events sections restyled to match screenshot
+Rework `EventsSection` in `src/routes/sfz.tsx`:
+- Header row: left-aligned title (`SFZ Upcoming Events` / `SFZ Past Events`) and a right-aligned **Explore All** pill button (brown bg, `ArrowUpRight` icon) linking to `/allUpcoming-sfz-events` or `/allPast-sfz-events`.
+- Empty state: centered brown text "Currently No Upcoming Events" / "Currently No Past Events" (matches screenshot).
+- Event cards restyled:
+  - Cover image on top with a floating month/day badge in the top-right (white pill, `Mon` above `DD`).
+  - Title below (bold, line-clamp-2).
+  - Short description (line-clamp-3).
+  - Footer row with `MapPin` + location and `Clock` + `HH:MM - HH:MM`.
+  - Centered brown **View** pill with `ArrowUpRight` at the bottom.
 
-- Why Choose SFZ:
-  - Long-term solution for unwanted emotions → `Waves`
-  - Self-love → `Heart`
-  - Uncover the secrets of focus → `Target`
-- Tools row:
-  - Tools Used → `Wrench`
-  - What Are The Outcomes? → `TrendingUp`
-  - Your Teacher → `GraduationCap`
+### 3. Seed one mock past event
+Migration inserts a single row into `sfz_events` with `start_at` ~30 days ago, `published = true`, a placeholder cover URL (use one of the existing gallery asset URLs), location "Bangalore, India", and descriptive short text so the Past Events grid isn't empty.
 
-Keep the amber-50 circle chip from the original.
+### 4. New full-list routes
+Create `src/routes/allUpcoming-sfz-events.tsx` and `src/routes/allPast-sfz-events.tsx`. Each:
+- `PageHero` with title.
+- Search input (filters by `event_name` / `location`, client-side over the fetched list).
+- Optional location-type filter dropdown (All / In-person / Online).
+- Same card grid as the SFZ page (reuse the extracted `EventCard`).
+- Fetches via a new `getAllSfzEvents({ type })` server fn that returns up to 100 rows (no limit(12) cap).
 
-### 2. New sections added to `src/routes/sfz.tsx` (in this order after `Tools`)
+Extract `EventCard` into `src/components/sfz/EventCard.tsx` so both the SFZ page and the two list pages share it.
 
-**A. Our Team** — sideways carousel using slick (`react-slick`, already imported via slick css). Fetches up to 7 trainers from a new `sfz_trainers` fallback... actually, no backend trainers exist yet, so render 6 placeholder trainer cards with the same odd/even vertical stagger (`mt-12` / `mb-12`), circular avatar placeholders, name, location w/ `MapPin` icon. "See All" button (`bg-brown`) links to `/trainer` (route not yet created — button-only for now, no navigation error since it's an `<a href>`).
+### 5. Head metadata
+Each new route gets its own `head()` with unique title/description/OG tags.
 
-**B. Request an SFZ Session CTA** — center-aligned block: `"Now you can request an SFZ Session"` heading + `bg-brown` pill button linking to new route `/request-sfz` with `ArrowUpRight` icon. Matches original spacing (`mt-24 space-y-5`).
-
-**C. Partnership** — restyled from current: left column keeps text + heading. Right column becomes a 2-up logo panel — two labeled placeholder tiles side-by-side (`VoiceUp` and `Oneness Generation`) in bordered white cards on a tan background band, so the logo swap is trivial later. Mobile stacks logos above text as before.
-
-**D. SFZ Upcoming Events** — heading `bg-tan` band, grid of event cards from Supabase table `sfz_events` filtered `event_type='upcoming'` (or start_date >= today). Card: cover image, title (2-line clamp), short description (3-line clamp), location w/ `MapPin`, time range w/ `Clock`, "View" pill button. Renders empty-state text when no rows.
-
-**E. SFZ Past Events** — same card layout, filtered to past events. Empty state when none.
-
-### 3. New route `src/routes/request-sfz.tsx`
-
-Port the original `RequestSFZSession` form:
-
-- Fields (2-col grid on md+): group/organization, contact name, phone (10 digits), email, group size, date requested, attendance type (radio: in-person / online), location (if in-person), preferred time, additional notes.
-- Validation: zod schema, react-hook-form.
-- Submit: `createServerFn` inserts into new `sfz_session_requests` Supabase table (public INSERT policy, no SELECT for anon).
-- Success: toast + `navigate({ to: "/sfz" })`. Back arrow (`ArrowLeft`) in top-left.
-- Styling: `max-w-5xl mx-auto bg-white rounded-xl shadow p-6 my-8`, `text-tanAccent` header — matches original.
-
-### 4. Database migrations (single migration)
-
-```sql
--- sfz_events: publicly readable, admin-managed
-CREATE TABLE public.sfz_events (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  event_name text NOT NULL,
-  event_short_description text,
-  cover_url text,
-  location text,
-  location_type text,           -- 'in_person' | 'online' | 'hybrid'
-  start_at timestamptz NOT NULL,
-  end_at timestamptz,
-  event_type text NOT NULL DEFAULT 'upcoming', -- 'upcoming' | 'past'
-  published boolean NOT NULL DEFAULT true,
-  created_at timestamptz NOT NULL DEFAULT now()
-);
-GRANT SELECT ON public.sfz_events TO anon, authenticated;
-GRANT ALL ON public.sfz_events TO service_role;
-ALTER TABLE public.sfz_events ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "sfz_events public read" ON public.sfz_events
-  FOR SELECT USING (published = true);
-
--- sfz_session_requests: anyone can submit, only service_role reads
-CREATE TABLE public.sfz_session_requests (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  group_name text NOT NULL,
-  contact_name text NOT NULL,
-  contact_phone text NOT NULL,
-  contact_email text NOT NULL,
-  group_size int NOT NULL,
-  date_requested date NOT NULL,
-  attendance_type text NOT NULL,
-  location text,
-  preferred_time text,
-  notes text,
-  created_at timestamptz NOT NULL DEFAULT now()
-);
-GRANT INSERT ON public.sfz_session_requests TO anon, authenticated;
-GRANT ALL ON public.sfz_session_requests TO service_role;
-ALTER TABLE public.sfz_session_requests ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "anyone can submit sfz request" ON public.sfz_session_requests
-  FOR INSERT WITH CHECK (true);
-```
-
-Both event lists start empty; the empty-state text keeps the page presentable until rows are added.
-
-### 5. Files touched
-
-- edit `src/routes/sfz.tsx` (Lucide icons in WhyChooseSFZ + Tools; new OurTeam, RequestCTA, restyled Partnership, SfzUpcomingEvents, SfzPastEvents sections; Supabase reads via `createServerFn` + TanStack Query per project pattern)
-- create `src/lib/sfz.functions.ts` (`getSfzEvents({ type })`, `submitSfzRequest(payload)`)
-- create `src/routes/request-sfz.tsx` (form page)
-- migration: create `sfz_events` + `sfz_session_requests` tables with GRANTs and RLS as above
+### Files touched
+- edit `src/routes/sfz.tsx` (video component, restyled section, "Explore All" links)
+- create `src/components/sfz/EventCard.tsx`
+- create `src/components/sfz/SfzVideo.tsx`
+- edit `src/lib/sfz.functions.ts` (add `getAllSfzEvents`)
+- create `src/routes/allUpcoming-sfz-events.tsx`
+- create `src/routes/allPast-sfz-events.tsx`
+- new migration: insert 1 mock past event
 
 ### Out of scope
+- Individual event detail pages (`/view-sfz-event/:id`) — the View button will link to `#` for now, or I can wire it to a detail route if you want.
+- Admin UI to manage events.
+- Server-side full-text search (client-side filter over ≤100 rows is fine for now).
 
-- Real trainer data (placeholders only; no `sfz_trainers` table yet)
-- Real VoiceUp / OG logos (labeled placeholders, swap later)
-- `/trainer` and `/view-sfz-event/:id` detail routes
-- Admin UI to manage events / view requests
+### Question
+The runtime error "Element type is invalid… got: object" on `/sfz` is likely from the `react-slick` default-export shape under SSR. I'll fix it in the same pass (dynamic import or `.default` fallback) — flagging so you know it'll change alongside the requested work.
