@@ -70,22 +70,24 @@ function EventsSlider() {
 
   return (
     <div className="relative w-full">
-      <Slider ref={(s) => { sliderRef.current = s; }} {...settings} className="px-6 py-6">
-        {cards.map((c, i) => (
-          <Link key={i} to={c.to} className="relative cursor-pointer rounded-xl block">
-            <img
-              src={c.imageUrl}
-              alt={c.title}
-              className="w-full md:h-[60vh] h-[40vh] object-cover rounded-2xl"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent rounded-2xl" />
-            <div className="absolute md:bottom-[10%] bottom-0 md:left-[30%] left-0 w-full p-6">
-              <h2 className="text-white text-xl md:text-3xl font-bold">{c.title}</h2>
-              <p className="text-white text-sm md:text-lg">{c.description}</p>
-            </div>
-          </Link>
-        ))}
-      </Slider>
+      <ClientOnly fallback={<div className="w-full md:h-[60vh] h-[40vh]" />}>
+        <Slider ref={(s) => { sliderRef.current = s; }} {...settings} className="px-6 py-6">
+          {cards.map((c, i) => (
+            <Link key={i} to={c.to} className="relative cursor-pointer rounded-xl block">
+              <img
+                src={c.imageUrl}
+                alt={c.title}
+                className="w-full md:h-[60vh] h-[40vh] object-cover rounded-2xl"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent rounded-2xl" />
+              <div className="absolute md:bottom-[10%] bottom-0 md:left-[30%] left-0 w-full p-6">
+                <h2 className="text-white text-xl md:text-3xl font-bold">{c.title}</h2>
+                <p className="text-white text-sm md:text-lg">{c.description}</p>
+              </div>
+            </Link>
+          ))}
+        </Slider>
+      </ClientOnly>
       <div className="flex justify-between w-full absolute top-[40%] text-lg md:text-2xl px-6 pointer-events-none">
         <button
           type="button"
