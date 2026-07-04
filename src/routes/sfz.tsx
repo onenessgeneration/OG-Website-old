@@ -362,31 +362,33 @@ function OurTeam() {
       </div>
 
       <div className="mt-6 relative">
-        <Slider {...settings}>
-          {trainerPlaceholders.map((trainer, idx) => (
-            <div key={trainer.name} className="px-4">
-              <div
-                className={`flex flex-col items-center text-center transition-all duration-300 ${
-                  idx % 2 === 0 ? "mt-12" : "mb-12"
-                }`}
-              >
-                <div className="w-48 h-48 rounded-full overflow-hidden shadow-md bg-secondary">
-                  <ImagePlaceholder
-                    label=""
-                    aspect="1/1"
-                    rounded="rounded-full"
-                    className="w-full h-full"
-                  />
+        <ClientOnly fallback={<div className="h-64" />}>
+          <Slider {...settings}>
+            {trainerPlaceholders.map((trainer, idx) => (
+              <div key={trainer.name} className="px-4">
+                <div
+                  className={`flex flex-col items-center text-center transition-all duration-300 ${
+                    idx % 2 === 0 ? "mt-12" : "mb-12"
+                  }`}
+                >
+                  <div className="w-48 h-48 rounded-full overflow-hidden shadow-md bg-secondary">
+                    <ImagePlaceholder
+                      label=""
+                      aspect="1/1"
+                      rounded="rounded-full"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <h3 className="mt-4 font-semibold">{trainer.name}</h3>
+                  <p className="text-gray-500 flex items-center justify-center text-sm mt-1">
+                    <MapPin className="mr-1 w-4 h-4 text-gray-400" />
+                    {trainer.location}
+                  </p>
                 </div>
-                <h3 className="mt-4 font-semibold">{trainer.name}</h3>
-                <p className="text-gray-500 flex items-center justify-center text-sm mt-1">
-                  <MapPin className="mr-1 w-4 h-4 text-gray-400" />
-                  {trainer.location}
-                </p>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        </ClientOnly>
       </div>
 
       <div className="text-center mt-24 space-y-5">
