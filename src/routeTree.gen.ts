@@ -27,6 +27,7 @@ import { Route as ContactUsRouteImport } from './routes/contact-us'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AllUpcomingSfzEventsRouteImport } from './routes/allUpcoming-sfz-events'
 import { Route as AllPastSfzEventsRouteImport } from './routes/allPast-sfz-events'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -120,6 +121,11 @@ const AllPastSfzEventsRoute = AllPastSfzEventsRouteImport.update({
   path: '/allPast-sfz-events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutUsRoute = AboutUsRouteImport.update({
   id: '/about-us',
   path: '/about-us',
@@ -134,6 +140,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/account': typeof AccountRoute
   '/allPast-sfz-events': typeof AllPastSfzEventsRoute
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/account': typeof AccountRoute
   '/allPast-sfz-events': typeof AllPastSfzEventsRoute
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
+  '/account': typeof AccountRoute
   '/allPast-sfz-events': typeof AllPastSfzEventsRoute
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
   '/blog': typeof BlogRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about-us'
+    | '/account'
     | '/allPast-sfz-events'
     | '/allUpcoming-sfz-events'
     | '/blog'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about-us'
+    | '/account'
     | '/allPast-sfz-events'
     | '/allUpcoming-sfz-events'
     | '/blog'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about-us'
+    | '/account'
     | '/allPast-sfz-events'
     | '/allUpcoming-sfz-events'
     | '/blog'
@@ -270,6 +282,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutUsRoute: typeof AboutUsRoute
+  AccountRoute: typeof AccountRoute
   AllPastSfzEventsRoute: typeof AllPastSfzEventsRoute
   AllUpcomingSfzEventsRoute: typeof AllUpcomingSfzEventsRoute
   BlogRoute: typeof BlogRoute
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AllPastSfzEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about-us': {
       id: '/about-us'
       path: '/about-us'
@@ -438,6 +458,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutUsRoute: AboutUsRoute,
+  AccountRoute: AccountRoute,
   AllPastSfzEventsRoute: AllPastSfzEventsRoute,
   AllUpcomingSfzEventsRoute: AllUpcomingSfzEventsRoute,
   BlogRoute: BlogRoute,
