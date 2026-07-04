@@ -18,6 +18,7 @@ import { ImagePlaceholder } from "@/components/Placeholder";
 import { getSfzEvents } from "@/lib/sfz.functions";
 import { EventCard, type SfzEvent } from "@/components/sfz/EventCard";
 import { SfzVideo } from "@/components/sfz/SfzVideo";
+import { ClientOnly } from "@/components/ClientOnly";
 
 // react-slick ships as CJS; under Vite SSR the default may be wrapped.
 const Slider = ((SliderModule as unknown) as { default?: typeof SliderModule }).default ?? SliderModule;
