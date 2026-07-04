@@ -1,95 +1,55 @@
+## Problem
 
-# Self-Hosting Migration Plan
+After email confirmation, Supabase redirects back with the access token in the URL hash. The browser client actually does hydrate the session (default `detectSessionInUrl: true`), but nothing in the UI reflects that — the header always renders a static "Login" pill. So the user is signed in, but the app looks identical to signed-out, and clicking "Login" then bounces them around.
 
-Move both the backend (to your own Supabase project) and the frontend (off *.lovable.app to a host of your choice). No data preservation needed — schema and admin account only. Email/password auth only, no Google.
+This is the "sign-in affordance must reflect session state" step that was never added when auth was ported.
 
-## Phase 1 — Prepare your Supabase project
+## Plan
 
-You'll do this in your Supabase dashboard; I'll give you the exact steps and files.
+### 1. Add a shared auth hook
 
-1. **Grab three values** from your empty Supabase project (Project Settings → API):
-   - Project URL (`https://<ref>.supabase.co`)
-   - `anon` / publishable key
-   - `service_role` key (keep private)
-2. **Enable Email auth**, disable "Confirm email" only if you want instant sign-in — I recommend leaving email confirmation ON so the admin-seeding trigger works as designed (it fires on `email_confirmed_at`).
-3. **Set the Site URL and Redirect URLs** to wherever the frontend will live (e.g. `http://localhost:8080`, your production domain, preview domains). This is what password reset & confirmation links point at.
+Create `src/hooks/useAuthUser.ts`:
+- On mount, call `supabase.auth.getSession()` to seed state.
+- Subscribe to `supabase.auth.onAuthStateChange` and update state on `SIGNED_IN`, `SIGNED_OUT`, `USER_UPDATED`, `INITIAL_SESSION`.
+- Return `{ user, loading }`.
 
-## Phase 2 — Run the schema against your Supabase
+Single source of truth for header + mobile menu + any future gated UI.
 
-Everything the app depends on is already in `supabase/migrations/*.sql` in the repo. To apply it to your project you have two options:
+### 2. Session-aware SiteHeader
 
-- **Option A (recommended): Supabase CLI.** From a local clone:
-  ```
-  supabase link --project-ref <your-ref>
-  supabase db push
-  ```
-  This runs every migration file in order, giving you an identical schema: `profiles`, `user_roles`, `app_role` enum, `has_role()`, `handle_new_user` trigger, `grant_owner_admin` trigger (seeds `christophuhl07@gmail.com` as admin on email confirmation), plus `blog_posts`, `sfz_events`, `sfz_session_requests`, `gallery_items`, `wallpapers`, `contact_messages`, `newsletter_signups` with RLS + GRANTs.
-- **Option B: paste the SQL manually.** I'll produce one consolidated SQL file combining every migration and you run it in your Supabase SQL editor.
+In `src/components/SiteHeader.tsx`:
+- Read `user` from `useAuthUser()`.
+- Wrap the auth affordance in `<ClientOnly>` (already exists) to avoid SSR hydration mismatch — server renders nothing, client swaps in the correct state.
+- When signed out: keep the existing "Login" pill.
+- When signed in: replace it with a small account dropdown (hover, same styling as Resources/Programs) showing the user's email, with:
+  - "My Account" → `/account` (placeholder route, see step 4)
+  - "Sign out" → calls the sign-out helper below.
 
-After migrations, sign up with `christophuhl07@gmail.com` and confirm the email — the trigger auto-grants you admin.
+### 3. Session-aware MobileMenu
 
-## Phase 3 — Point the frontend at your Supabase
+Mirror the same logic inside `src/components/MobileMenu.tsx`: show Login link when signed out, show email + Sign out button when signed in.
 
-The Supabase client reads env vars. I'll change the env source so the app can be built against either backend without code changes.
+### 4. Sign-out helper + minimal /account route
 
-- Update `.env.example` (and your local `.env`) with placeholders for your values:
-  - `VITE_SUPABASE_URL`
-  - `VITE_SUPABASE_PUBLISHABLE_KEY`
-  - `VITE_SUPABASE_PROJECT_ID`
-  - Server-side: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-- Add a short `MIGRATION.md` documenting exactly which env vars to set on your chosen host.
-- Note: while you're still building in Lovable, the current `.env` is auto-managed by Lovable Cloud. Overriding those variables only takes effect once you deploy outside Lovable — the in-editor preview will keep talking to the Cloud backend.
+- Add `src/lib/auth.ts` exporting `signOut()` that follows the sign-out hygiene rules: `queryClient.cancelQueries()` (no-op if no client yet — we don't have TanStack Query wired, so just `supabase.auth.signOut()` + `router.invalidate()` + navigate to `/`).
+- Create `src/routes/account.tsx` as a minimal placeholder page ("Signed in as {email}", Sign out button). This gives the "My Account" link somewhere to go; we can expand later.
 
-## Phase 4 — Frontend hosting
+### 5. Confirm redirect handling still works
 
-TanStack Start deploys to any Node or edge host. Best options:
+The confirmation link redirects to `window.location.origin` (set in `register.tsx`'s `emailRedirectTo`). With `detectSessionInUrl: true` (Supabase default) the client parses the hash and stores the session in `localStorage`. Our new hook + listener will pick it up on the very first render, so the header flips to signed-in immediately after landing on `/`.
 
-- **Cloudflare Pages/Workers** — matches the current runtime (already Cloudflare Workers under the hood). Cheapest and closest to today's behavior.
-- **Vercel** — simplest DX for TanStack Start.
-- **Netlify** — also supported.
+No changes to `client.ts` (auto-generated), no schema changes, no server functions.
 
-Recommended path: **Cloudflare Pages**, because the existing `wrangler.jsonc` already targets Workers.
+### Out of scope (call out to the user)
 
-Steps I'll write into `MIGRATION.md`:
-1. Connect the GitHub repo to Cloudflare Pages.
-2. Build command: `bun run build`; output as configured by the Vite/TanStack plugin.
-3. Set the six env vars from Phase 3 in the Pages project.
-4. Add your production domain in Cloudflare and set that same URL as Site URL in Supabase.
+- Protected route gating (`_authenticated/` layout) — not needed for this fix.
+- Full account/profile management UI — placeholder page only.
+- Admin-only UI (that's a separate follow-up after we set `christophuhl07@gmail.com` as owner via the trigger, which already fires on confirmation).
 
-## Phase 5 — Auth email templates
+## Files touched
 
-Lovable Cloud was handling auth emails. On your own Supabase you have two choices:
-
-- **Use Supabase's default SMTP** — fine for low volume, gets flagged as spam more often. Zero setup.
-- **Bring your own SMTP** (Resend, SendGrid, Postmark, etc.) — configure in Supabase → Authentication → Emails → SMTP Settings, then customize the email templates.
-
-Recommendation: start with default SMTP, switch to Resend later if deliverability matters.
-
-## Phase 6 — Post-migration cleanup (optional)
-
-Once the self-hosted version is confirmed working:
-
-- Leave the Lovable Cloud backend as-is (it can't be disabled on this project).
-- Stop editing in Lovable, or keep using Lovable purely as an IDE that syncs to GitHub — your published site won't touch it.
-- Later, if you want to update via Lovable again, you'd need to re-add cloud env vars temporarily so the in-editor preview keeps working.
-
----
-
-## Technical details
-
-- **What I will change in code** (Phase 3): only `.env.example` and a new `MIGRATION.md`. No changes to `src/integrations/supabase/*` — those files are auto-generated and already read from env vars correctly.
-- **What you will do manually**:
-  - Create Supabase project settings (Site URL, redirects, email auth)
-  - Run `supabase db push` OR paste consolidated SQL
-  - Sign up as admin and confirm email
-  - Create Cloudflare Pages (or Vercel) project, set env vars, connect repo
-  - Point your DNS at the new host
-- **Admin promotion after seed**: the current schema only auto-seeds *your* email. Promoting other users to admin is a separate feature (an admin CMS page) — we haven't built it yet. Do you want that in this migration, or as a follow-up once the self-host is live?
-
-## Deliverables from me in build mode
-
-1. Updated `.env.example` with the full list of required variables and comments explaining each.
-2. New `MIGRATION.md` at repo root with copy-pasteable step-by-step instructions for Supabase setup, DB push, Cloudflare Pages deploy, and DNS.
-3. Optional: a single consolidated `migrations/full-schema.sql` for users who prefer the SQL-editor path over the CLI.
-
-Nothing in the runtime code needs to change for the migration itself.
+- new `src/hooks/useAuthUser.ts`
+- new `src/lib/auth.ts`
+- new `src/routes/account.tsx`
+- edit `src/components/SiteHeader.tsx`
+- edit `src/components/MobileMenu.tsx`

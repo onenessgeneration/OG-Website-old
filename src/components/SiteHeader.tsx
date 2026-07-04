@@ -2,6 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import logoUrl from "@/assets/logo.png";
 import { MobileMenu } from "./MobileMenu";
+import { ClientOnly } from "./ClientOnly";
+import { useAuthUser } from "@/hooks/useAuthUser";
+import { signOut } from "@/lib/auth";
+
 
 // Ported from OG_Website oneness-frontend/src/Common/Header.jsx.
 // Preserves the original bg-tan / text-brown palette, chevron dropdowns,
@@ -103,13 +107,11 @@ export function SiteHeader() {
             <Link to="/contact-us" className="menu-item xl:text-lg text-[13px] whitespace-nowrap">
               Contact
             </Link>
-            <Link
-              to="/login"
-              className="md:px-6 px-4 uppercase text-[14px] relative md:py-[6px] py-[4px] bg-brown text-white rounded-full hover:bg-darkGreyBrown transition duration-300"
-            >
-              Login
-            </Link>
+            <ClientOnly fallback={<span className="md:px-6 px-4 md:py-[6px] py-[4px] invisible">Login</span>}>
+              <AuthAffordance />
+            </ClientOnly>
           </div>
+
 
           <div className="lg:hidden block md:mt-0 mt-1">
             <MobileMenu
@@ -124,3 +126,48 @@ export function SiteHeader() {
     </header>
   );
 }
+
+function AuthAffordance() {
+  const { user, loading } = useAuthUser();
+
+  if (loading) {
+    return <span className="md:px-6 px-4 md:py-[6px] py-[4px] invisible">Login</span>;
+  }
+
+  if (!user) {
+    return (
+      <Link
+        to="/login"
+        className="md:px-6 px-4 uppercase text-[14px] relative md:py-[6px] py-[4px] bg-brown text-white rounded-full hover:bg-darkGreyBrown transition duration-300"
+      >
+        Login
+      </Link>
+    );
+  }
+
+  const label = user.email ?? "Account";
+
+  return (
+    <div className="relative group">
+      <button className="md:px-6 px-4 uppercase text-[14px] md:py-[6px] py-[4px] bg-brown text-white rounded-full hover:bg-darkGreyBrown transition duration-300 max-w-[180px] truncate">
+        {label}
+      </button>
+      <ul className="absolute right-0 z-50 mt-1 xl:text-lg text-sm bg-white rounded-md shadow-lg text-brown hidden group-hover:block w-48">
+        <li>
+          <Link to="/account" className="block px-4 py-2 rounded-t-md">
+            My Account
+          </Link>
+        </li>
+        <li>
+          <button
+            onClick={() => void signOut()}
+            className="block w-full text-left px-4 py-2 rounded-b-md"
+          >
+            Sign out
+          </button>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
