@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import Slider from "react-slick";
+import SliderModule from "react-slick";
+import { ClientOnly } from "@/components/ClientOnly";
+
+const Slider = ((SliderModule as unknown) as { default?: typeof SliderModule }).default ?? SliderModule;
 
 // Ported from oneness-frontend/src/Components/Home/NewTestimonials.jsx.
 // Uses static testimonial data until Supabase-backed testimonials wire in.
