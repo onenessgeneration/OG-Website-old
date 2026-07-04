@@ -117,71 +117,73 @@ export default function NewTestimonials() {
           </div>
         </div>
 
-        <Slider
-          ref={(s) => {
-            sliderRef.current = s;
-          }}
-          {...settings}
-          className="relative overflow-hidden md:w-2/3"
-        >
-          {testimonials.map((d, index) => {
-            const isExpanded = expandedIndex === index;
-            const isQuoteExpanded = expandedQuoteIndex === index;
-            return (
-              <div key={index} className="md:px-10 px-2">
-                <div className="relative bg-tan shadow-md rounded-lg flex flex-col md:p-6 p-3 md:space-y-4 space-y-2 h-full">
-                  <div className="lg:absolute top-24 md:-left-10 -left-3 z-50">
-                    <img
-                      alt={`${d.participant}'s Image`}
-                      src={d.testimonialImageURL}
-                      className="size-20 rounded-full object-cover border-4 border-white bg-gray-400"
-                    />
-                  </div>
-
-                  <div className="flex items-center md:space-x-4">
-                    <div className="flex gap-2 items-center lg:pl-12">
-                      <h3 className="lg:text-2xl text-md font-semibold text-gray-600">
-                        {truncate(d.participant, 15)}
-                      </h3>
-                      <p className="text-sm text-gray-800">({truncate(d.location, 20)})</p>
+        <ClientOnly fallback={<div className="md:w-2/3 min-h-[200px]" />}>
+          <Slider
+            ref={(s: any) => {
+              sliderRef.current = s;
+            }}
+            {...settings}
+            className="relative overflow-hidden md:w-2/3"
+          >
+            {testimonials.map((d, index) => {
+              const isExpanded = expandedIndex === index;
+              const isQuoteExpanded = expandedQuoteIndex === index;
+              return (
+                <div key={index} className="md:px-10 px-2">
+                  <div className="relative bg-tan shadow-md rounded-lg flex flex-col md:p-6 p-3 md:space-y-4 space-y-2 h-full">
+                    <div className="lg:absolute top-24 md:-left-10 -left-3 z-50">
+                      <img
+                        alt={`${d.participant}'s Image`}
+                        src={d.testimonialImageURL}
+                        className="size-20 rounded-full object-cover border-4 border-white bg-gray-400"
+                      />
                     </div>
-                  </div>
-                  <div className="lg:pl-12">
-                    <p className="text-[11px] text-gray-500">{truncate(d.tag, 20)}</p>
-                  </div>
 
-                  <p className="text-gray-500 md:text-[12px] text-[11px] md:pl-12">
-                    {isExpanded ? d.actualTestimonial : truncate(d.actualTestimonial, 250)}
-                    {d.actualTestimonial.length > 250 && (
-                      <button
-                        onClick={() =>
-                          setExpandedIndex((prev) => (prev === index ? -1 : index))
-                        }
-                        className="text-brown hover:underline ml-2"
-                      >
-                        {isExpanded ? "Read Less" : "Read More"}
-                      </button>
-                    )}
-                  </p>
+                    <div className="flex items-center md:space-x-4">
+                      <div className="flex gap-2 items-center lg:pl-12">
+                        <h3 className="lg:text-2xl text-md font-semibold text-gray-600">
+                          {truncate(d.participant, 15)}
+                        </h3>
+                        <p className="text-sm text-gray-800">({truncate(d.location, 20)})</p>
+                      </div>
+                    </div>
+                    <div className="lg:pl-12">
+                      <p className="text-[11px] text-gray-500">{truncate(d.tag, 20)}</p>
+                    </div>
 
-                  <p className="text-gray-500 text-[12px] md:pl-12">
-                    {isQuoteExpanded ? d.quotes : truncate(d.quotes, 200)}
-                    {d.quotes.length > 200 && (
-                      <button
-                        onClick={() =>
-                          setExpandedQuoteIndex((prev) => (prev === index ? -1 : index))
-                        }
-                        className="text-brown hover:underline ml-2"
-                      >
-                        {isQuoteExpanded ? "Read Less" : "Read More"}
-                      </button>
-                    )}
-                  </p>
+                    <p className="text-gray-500 md:text-[12px] text-[11px] md:pl-12">
+                      {isExpanded ? d.actualTestimonial : truncate(d.actualTestimonial, 250)}
+                      {d.actualTestimonial.length > 250 && (
+                        <button
+                          onClick={() =>
+                            setExpandedIndex((prev) => (prev === index ? -1 : index))
+                          }
+                          className="text-brown hover:underline ml-2"
+                        >
+                          {isExpanded ? "Read Less" : "Read More"}
+                        </button>
+                      )}
+                    </p>
+
+                    <p className="text-gray-500 text-[12px] md:pl-12">
+                      {isQuoteExpanded ? d.quotes : truncate(d.quotes, 200)}
+                      {d.quotes.length > 200 && (
+                        <button
+                          onClick={() =>
+                            setExpandedQuoteIndex((prev) => (prev === index ? -1 : index))
+                          }
+                          className="text-brown hover:underline ml-2"
+                        >
+                          {isQuoteExpanded ? "Read Less" : "Read More"}
+                        </button>
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </Slider>
+              );
+            })}
+          </Slider>
+        </ClientOnly>
       </div>
     </div>
   );
