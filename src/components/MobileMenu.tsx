@@ -147,11 +147,3 @@ function MobileAuthAffordance({ onNavigate }: { onNavigate: () => void }) {
     </div>
   );
 }
-
-            </nav>
-          </div>
-        </>
-      )}
-    </>
-  );
-}
