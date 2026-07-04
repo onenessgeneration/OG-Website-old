@@ -7,6 +7,7 @@ import sfzImg from "@/assets/programs/events/sfz.jpg";
 import breakthroughImg from "@/assets/programs/events/breakthrough.jpg";
 import skyImg from "@/assets/programs/sky/Sky1.png";
 import youthImg from "@/assets/Home/Vision/IMG_2950.jpg";
+import { ClientOnly } from "@/components/ClientOnly";
 
 const Slider = ((SliderModule as unknown) as { default?: typeof SliderModule }).default ?? SliderModule;
 
