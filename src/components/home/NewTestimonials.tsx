@@ -71,7 +71,7 @@ const truncate = (text: string, charLimit: number) => {
 };
 
 export default function NewTestimonials() {
-  const sliderRef = useRef<Slider | null>(null);
+  const sliderRef = useRef<any>(null);
   const [expandedIndex, setExpandedIndex] = useState(-1);
   const [expandedQuoteIndex, setExpandedQuoteIndex] = useState(-1);
 
