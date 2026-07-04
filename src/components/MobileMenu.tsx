@@ -1,6 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { ClientOnly } from "./ClientOnly";
+import { useAuthUser } from "@/hooks/useAuthUser";
+import { signOut } from "@/lib/auth";
+
 
 // Simplified port of OG_Website oneness-frontend/src/Common/MobileMenu.jsx.
 // Keeps the same link set and cream palette; uses a lightweight slide-in panel.
@@ -96,13 +100,54 @@ export function MobileMenu({ open, onOpenChange, resourceLinks, programLinks }: 
                 Contact
               </Link>
 
-              <Link
-                to="/login"
-                onClick={close}
-                className="inline-block mt-4 px-6 py-2 uppercase text-sm bg-brown text-white rounded-full hover:bg-darkGreyBrown transition"
-              >
-                Login
-              </Link>
+              <ClientOnly>
+                <MobileAuthAffordance onNavigate={close} />
+              </ClientOnly>
+            </nav>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+function MobileAuthAffordance({ onNavigate }: { onNavigate: () => void }) {
+  const { user, loading } = useAuthUser();
+  if (loading) return null;
+  if (!user) {
+    return (
+      <Link
+        to="/login"
+        onClick={onNavigate}
+        className="inline-block mt-4 px-6 py-2 uppercase text-sm bg-brown text-white rounded-full hover:bg-darkGreyBrown transition"
+      >
+        Login
+      </Link>
+    );
+  }
+  return (
+    <div className="mt-4 space-y-3">
+      <p className="text-sm text-darkGreyBrown/80 break-all">{user.email}</p>
+      <Link
+        to="/account"
+        onClick={onNavigate}
+        className="block text-lg"
+      >
+        My Account
+      </Link>
+      <button
+        onClick={() => {
+          onNavigate();
+          void signOut();
+        }}
+        className="inline-block px-6 py-2 uppercase text-sm bg-darkGreyBrown text-tan rounded-full hover:bg-brown transition"
+      >
+        Sign out
+      </button>
+    </div>
+  );
+}
+
             </nav>
           </div>
         </>
