@@ -1,73 +1,95 @@
-## Hosting & Backend Plan
 
-### Where the site runs
+# Self-Hosting Migration Plan
 
-The app is a **TanStack Start** project deployed on **Lovable's hosting** (Cloudflare Workers under the hood). No separate hosting service or DevOps is required — clicking **Publish** in Lovable ships the site.
+Move both the backend (to your own Supabase project) and the frontend (off *.lovable.app to a host of your choice). No data preservation needed — schema and admin account only. Email/password auth only, no Google.
 
-Two URLs are provisioned automatically:
-- **Preview URL** (auto-updates as we edit): `https://id-preview--...lovable.app`
-- **Published URL** (updates only when you click Publish): `https://oneness-next-gen.lovable.app` (renameable)
+## Phase 1 — Prepare your Supabase project
 
-A custom domain (e.g. `onenessgeneration.org`) can be attached later from Project Settings → Domains — no code changes needed. For now we keep the Lovable URL.
+You'll do this in your Supabase dashboard; I'll give you the exact steps and files.
 
-### Where the backend runs
+1. **Grab three values** from your empty Supabase project (Project Settings → API):
+   - Project URL (`https://<ref>.supabase.co`)
+   - `anon` / publishable key
+   - `service_role` key (keep private)
+2. **Enable Email auth**, disable "Confirm email" only if you want instant sign-in — I recommend leaving email confirmation ON so the admin-seeding trigger works as designed (it fires on `email_confirmed_at`).
+3. **Set the Site URL and Redirect URLs** to wherever the frontend will live (e.g. `http://localhost:8080`, your production domain, preview domains). This is what password reset & confirmation links point at.
 
-Backend is **Lovable Cloud** (managed Postgres + Auth + Storage + Edge Functions, no separate account, no keys to manage). Already enabled and already holds the tables the site reads: `blog_posts`, `gallery_items`, `wallpapers`, `sfz_events`, `sfz_session_requests`, `contact_messages`, `newsletter_signups`.
+## Phase 2 — Run the schema against your Supabase
 
-Server code lives inside the same TanStack Start app (`createServerFn` for internal calls, server routes under `src/routes/api/public/` for webhooks). There is no separate backend server to deploy — the same **Publish** button ships both frontend and backend.
+Everything the app depends on is already in `supabase/migrations/*.sql` in the repo. To apply it to your project you have two options:
 
-### What we still need to build
+- **Option A (recommended): Supabase CLI.** From a local clone:
+  ```
+  supabase link --project-ref <your-ref>
+  supabase db push
+  ```
+  This runs every migration file in order, giving you an identical schema: `profiles`, `user_roles`, `app_role` enum, `has_role()`, `handle_new_user` trigger, `grant_owner_admin` trigger (seeds `christophuhl07@gmail.com` as admin on email confirmation), plus `blog_posts`, `sfz_events`, `sfz_session_requests`, `gallery_items`, `wallpapers`, `contact_messages`, `newsletter_signups` with RLS + GRANTs.
+- **Option B: paste the SQL manually.** I'll produce one consolidated SQL file combining every migration and you run it in your Supabase SQL editor.
 
-**1. Fix `/sfz` crash (prerequisite)**
-`react-slick`'s default export is an object under SSR, breaking `<Slider>`. Load `react-slick` client-side only (via `ClientOnly` wrapper or dynamic client-only import) on `/sfz` and `/programs`. Same fix pattern for `NewTestimonials` on home if it ever hits SSR issues.
+After migrations, sign up with `christophuhl07@gmail.com` and confirm the email — the trigger auto-grants you admin.
 
-**2. Auth (email + password + Google)**
-- Enable email/password + Google provider on Lovable Cloud.
-- The existing `/login`, `/register`, `/forgot-password`, `/reset-password` pages already call the right APIs — no UI rewrite.
-- Add a Google button on login/register that calls the Lovable OAuth broker.
+## Phase 3 — Point the frontend at your Supabase
 
-**3. `profiles` table + roles**
-- `profiles` table: `id` (FK → auth.users), `full_name`, `created_at`. Auto-populated by a `handle_new_user` trigger that reads `full_name` from signup metadata (already sent by `/register`).
-- Separate `user_roles` table with an `app_role` enum (`admin`, `user`) and a `has_role(user_id, role)` security-definer function — the required pattern to avoid RLS recursion.
-- Migration seeds `christophuhl07@gmail.com` as `admin` via a trigger that fires when that user confirms email (so no privilege-escalation risk).
-- Admin UI can grant/revoke `admin` role to any user (RLS: only admins can insert into `user_roles`).
+The Supabase client reads env vars. I'll change the env source so the app can be built against either backend without code changes.
 
-**4. Admin CMS (`/admin/*`, gated)**
-New protected subtree `src/routes/_authenticated/admin/*` with a role gate (`has_role(uid, 'admin')`). Screens:
-- **Dashboard** — counts, recent contact messages, recent signups.
-- **SFZ Events** — list / create / edit / delete / publish toggle. Fields match `sfz_events` (name, description, cover, location, location_type, start_at, end_at, published).
-- **Blog Posts** — list / create / edit / delete / publish toggle (title, excerpt, content, author, cover, published).
-- **Gallery** — upload image → Cloud Storage, save row in `gallery_items` (title, category, image_url).
-- **Wallpapers** — same as Gallery but for `wallpapers` bucket.
-- **Session Requests** — read-only inbox of `sfz_session_requests` submissions.
-- **Contact Messages** — read-only inbox of `contact_messages`.
-- **Newsletter Signups** — read-only list of `newsletter_signups` with CSV export.
-- **Users** — list users, grant/revoke `admin`.
+- Update `.env.example` (and your local `.env`) with placeholders for your values:
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_PUBLISHABLE_KEY`
+  - `VITE_SUPABASE_PROJECT_ID`
+  - Server-side: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+- Add a short `MIGRATION.md` documenting exactly which env vars to set on your chosen host.
+- Note: while you're still building in Lovable, the current `.env` is auto-managed by Lovable Cloud. Overriding those variables only takes effect once you deploy outside Lovable — the in-editor preview will keep talking to the Cloud backend.
 
-Writes on `sfz_events`, `blog_posts`, `gallery_items`, `wallpapers` gated by `has_role(auth.uid(), 'admin')` in RLS. Reads on `contact_messages`, `sfz_session_requests`, `newsletter_signups`, `user_roles` are admin-only too.
+## Phase 4 — Frontend hosting
 
-**5. Storage buckets**
-- `gallery` (public read) — for uploaded gallery photos.
-- `wallpapers` (public read) — for uploaded wallpapers.
-- `blog-covers` (public read) — for blog post covers.
-- `event-covers` (public read) — for SFZ event covers.
-Admin UI uploads via `supabase.storage.from(...).upload(...)`; public URL is stored in the corresponding table's `image_url`/`cover_url`.
+TanStack Start deploys to any Node or edge host. Best options:
 
-**6. Video assets on the home page + `/sfz`**
-The SFZ video already lives on the Lovable asset CDN. For a **home page banner video**, we'll upload the mp4 you provide via the same asset flow and wire it into `<Banner videoSrc={...} />` (the prop is already accepted).
+- **Cloudflare Pages/Workers** — matches the current runtime (already Cloudflare Workers under the hood). Cheapest and closest to today's behavior.
+- **Vercel** — simplest DX for TanStack Start.
+- **Netlify** — also supported.
 
-**7. Publishing checklist**
-Once the above lands: click **Publish** once to make the live site current. Frontend changes require re-publishing; backend (migrations, functions, RLS) deploys immediately.
+Recommended path: **Cloudflare Pages**, because the existing `wrangler.jsonc` already targets Workers.
 
-### What I need from you next
+Steps I'll write into `MIGRATION.md`:
+1. Connect the GitHub repo to Cloudflare Pages.
+2. Build command: `bun run build`; output as configured by the Vite/TanStack plugin.
+3. Set the six env vars from Phase 3 in the Pages project.
+4. Add your production domain in Cloudflare and set that same URL as Site URL in Supabase.
 
-1. Upload the home-page **banner video** file (drag it into chat).
-2. Any **event / blog / gallery / wallpaper** starter content, or is it fine for you to add via the admin CMS after it's live?
-3. Confirm the **admin CMS** should live at `/admin` (versus a hidden URL).
+## Phase 5 — Auth email templates
 
-### Out of scope for this pass
+Lovable Cloud was handling auth emails. On your own Supabase you have two choices:
 
-- Custom domain hookup (do later from Project Settings).
-- Rich-text editor for blog posts — first pass uses a plain textarea for Markdown/HTML; upgrade later if needed.
-- Email notifications when someone submits contact / SFZ / newsletter forms — can add via Lovable Email as a follow-up.
-- Migrating the ~193 MB of images in `src/assets/` to the CDN (unrelated to backend, but worth a separate skill run to shrink the repo).
+- **Use Supabase's default SMTP** — fine for low volume, gets flagged as spam more often. Zero setup.
+- **Bring your own SMTP** (Resend, SendGrid, Postmark, etc.) — configure in Supabase → Authentication → Emails → SMTP Settings, then customize the email templates.
+
+Recommendation: start with default SMTP, switch to Resend later if deliverability matters.
+
+## Phase 6 — Post-migration cleanup (optional)
+
+Once the self-hosted version is confirmed working:
+
+- Leave the Lovable Cloud backend as-is (it can't be disabled on this project).
+- Stop editing in Lovable, or keep using Lovable purely as an IDE that syncs to GitHub — your published site won't touch it.
+- Later, if you want to update via Lovable again, you'd need to re-add cloud env vars temporarily so the in-editor preview keeps working.
+
+---
+
+## Technical details
+
+- **What I will change in code** (Phase 3): only `.env.example` and a new `MIGRATION.md`. No changes to `src/integrations/supabase/*` — those files are auto-generated and already read from env vars correctly.
+- **What you will do manually**:
+  - Create Supabase project settings (Site URL, redirects, email auth)
+  - Run `supabase db push` OR paste consolidated SQL
+  - Sign up as admin and confirm email
+  - Create Cloudflare Pages (or Vercel) project, set env vars, connect repo
+  - Point your DNS at the new host
+- **Admin promotion after seed**: the current schema only auto-seeds *your* email. Promoting other users to admin is a separate feature (an admin CMS page) — we haven't built it yet. Do you want that in this migration, or as a follow-up once the self-host is live?
+
+## Deliverables from me in build mode
+
+1. Updated `.env.example` with the full list of required variables and comments explaining each.
+2. New `MIGRATION.md` at repo root with copy-pasteable step-by-step instructions for Supabase setup, DB push, Cloudflare Pages deploy, and DNS.
+3. Optional: a single consolidated `migrations/full-schema.sql` for users who prefer the SQL-editor path over the CLI.
+
+Nothing in the runtime code needs to change for the migration itself.
