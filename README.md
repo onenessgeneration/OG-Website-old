@@ -3,11 +3,79 @@
 Public website for **Oneness Generation**, a community of young people moving towards
 stress-free living through meditation, yoga, and self-development programs.
 
-- **Production host:** Vercel (outside of Lovable)
-- **Backend / database / storage / auth:** Supabase (outside of Lovable, project "OG Website")
-- **Development workflow:** [Lovable](https://lovable.dev) — changes made in Lovable are synced to GitHub and deployed by Vercel.
+---
+
+# Part A — For humans (non-technical)
+
+This section is for people who want to understand, run, or update the website without
+digging into code. If you are a developer or an AI working on the code, read **Part B**
+below instead.
+
+## What this website is
+
+A public marketing/content site with these main areas:
+
+- **Program pages** — SFZ, Soul Sync, Serene Mind, Oneness Yoga, Summer Camp, and more.
+- **Blog** — public articles; logged-in users can submit posts that an admin approves.
+- **Gallery & Wallpapers** — photo and wallpaper media pages.
+- **Event listings** — SFZ events, split automatically into upcoming vs. past by date.
+- **Contact, Get Involved, Request a Session** — public forms that land in an inbox.
+- **Account** — a simple dashboard for logged-in users.
+
+## Where the site lives
+
+- **Production website:** Vercel
+- **Backend / database / storage / sign-in:** Supabase (project "OG Website")
+- **Development:** [Lovable](https://lovable.dev) — code is edited in Lovable, synced to
+  GitHub, and deployed to Vercel.
+
+**None of this is hosted on Lovable's servers.** The website, its database, and its files
+all run on your own Vercel and Supabase accounts.
+
+## What is an "admin"?
+
+Admins are people who manage the site content through the website itself — no code needed.
+
+- Sign in with the admin email address, then visit **/admin**.
+- From there you can manage events, approve blog posts, change images/videos, add
+  testimonials and trainers, and manage the gallery.
+- Everything an admin edits updates the live site immediately.
+
+## Where the pictures and videos live
+
+All site images and videos are stored in the project's own storage (the `site-media`
+bucket) and managed through the **Site Media** admin page (**/admin/site-media**). There
+you can:
+
+- Upload new images/videos (including bulk-uploading several at once).
+- **Select from database** — pick any file that is already stored and assign it to a spot.
+- See, grouped by page, exactly which spot on the website each file belongs to.
+
+**How you know what goes where:** whenever a spot has no image yet, the live page shows a
+placeholder with that spot's **ID written on it** (e.g. `home-banner-poster`). Find the
+same ID on the Site Media page, upload a file to it, and the real picture appears.
+
+**One limit to know:** on the free Supabase plan each individual file upload is limited to
+**50 MB**. The upload form will warn you if a file is too big.
+
+## The most common tasks
+
+| I want to… | What I do |
+|---|---|
+| Change a banner image/video or logo | Go to **/admin/site-media** |
+| Reuse an image that's already uploaded | **/admin/site-media** → "select from database" |
+| Add photos to the gallery | **/admin/gallery** (can upload several at once) |
+| Add or edit an event | **/admin/events/new** |
+| Approve a submitted blog post | **/admin/blog** |
+| Add a trainer or testimonial | **/admin/trainers**, **/admin/testimonials** |
+| Update the text or styling | Ask someone using Lovable to change it (see Part B) |
 
 ---
+
+# Part B — For developers & AIs (technical)
+
+This section is for people (or AI agents) making code changes. Read it fully before
+editing — there are important rules that will save you from breaking things.
 
 ## 1. Tech stack
 
@@ -24,8 +92,6 @@ stress-free living through meditation, yoga, and self-development programs.
 **Do not** add `react-router-dom`, `src/pages/`, or an `App.tsx` switcher — routing is
 TanStack file-based only. Never edit `src/routeTree.gen.ts` (it is generated).
 
----
-
 ## 2. Architecture at a glance
 
 ```
@@ -36,7 +102,7 @@ src/
 │  ├─ sfz.tsx, soul-sync.tsx, serene-mind.tsx, ...   Program/content pages
 │  ├─ blog.tsx, blog.$id.tsx, blog.submit.tsx        Public blog + post detail + user submission
 │  ├─ gallery.tsx, wallpapers.tsx                    Media pages
-│  ├─ admin.tsx / admin.*.tsx                        Admin CMS (see §5)
+│  ├─ admin.tsx / admin.*.tsx                        Admin CMS (see §6)
 │  └─ login/register/forgot-password/reset-password/account.tsx   Auth pages
 ├─ components/              Shared components (SiteHeader, SiteFooter, home/*, sfz/*, admin/*)
 ├─ integrations/supabase/   Generated Supabase client + auth middleware (do NOT edit the generated files)
@@ -48,8 +114,6 @@ src/
 `bg-tan` (#f9f4ea), `text-brown` (#b78036), `bg-tanAccent` (#cdad85),
 `text-darkGreyBrown` (#605f4b), `bg-brightYellow` (#fff300), `bg-brightIndigo` (#6f00fe),
 `bg-darkGrey` (#1b1d1e). Use these instead of hardcoded hex utilities.
-
----
 
 ## 3. Supabase connection (important!)
 
@@ -67,9 +131,15 @@ The app is wired to the project's **own** Supabase instance, **not** Lovable Clo
 - Server functions (`createServerFn`) use the same hardcoded URL/key server-side.
 - The Lovable-managed `VITE_SUPABASE_*` env vars are **not** used by the app at runtime.
 
-**Rule: Lovable must never change the Supabase setup.** If a schema or storage change is
-needed, the AI should hand you the SQL to run yourself in your own Supabase SQL editor —
-it must not apply migrations to any Lovable-managed project.
+**Never hardcode, log, or return the service-role key.** It is not available in Lovable
+and must never be committed.
+
+### Rules for changing the backend
+
+**Lovable must never change the Supabase setup.** If a schema or storage change is needed,
+the AI should hand you the SQL to run yourself in your own Supabase SQL editor — it must
+not apply migrations to any Lovable-managed project. This applies to the user's own
+Supabase as well: explain the change and let the maintainer run it.
 
 The canonical schema lives in **`supabase/full-schema.sql`** — fully idempotent
 (`IF NOT EXISTS` / `CREATE OR REPLACE` / `DROP ... IF EXISTS` + `CREATE`), safe to re-run
@@ -106,8 +176,6 @@ Images are served via `getPublicUrl`; write access is admin-only via RLS policie
 `storage.objects`. Supabase Free tier has a **50 MB per-file upload limit** — the CMS
 surfaces and enforces this.
 
----
-
 ## 4. Authentication & roles
 
 - Email/password auth (login/register/forgot/reset pages) via Supabase Auth.
@@ -116,9 +184,16 @@ surfaces and enforces this.
 - Logged-in users can view `/account` and submit blog drafts at `/blog/submit`.
 - Everything under `/admin/*` requires the `admin` role.
 
----
+## 5. Site-media slot convention
 
-## 5. Admin CMS (on the website itself)
+Every replaceable image/video on the public pages renders through a slot component. When
+a slot has no file yet, the page shows a placeholder with the **slot ID overlaid**, so an
+admin can find exactly where it belongs in the CMS. Re-uploading to a slot overwrites the
+same fixed path — consumers never change. Slots are grouped by page in `src/lib/siteMedia.ts`,
+each with a description of where on the site it is used. Duplicate paths across slots are
+rejected.
+
+## 6. Admin CMS (on the website itself)
 
 Entry point: **`/admin`** (visible after signing in as an admin).
 
@@ -132,14 +207,7 @@ Entry point: **`/admin`** (visible after signing in as an admin).
 | `/admin/trainers` | Create, hide/unhide, reorder, delete SFZ trainers |
 | `/admin/gallery` | Upload (single or bulk), hide/unhide, reorder, delete gallery photos |
 
-**Site-media slot convention:** every replaceable image/video on the public pages renders
-through a slot component. When a slot has no file yet, the page shows a placeholder with
-the **slot ID overlaid**, so an admin can find exactly where it belongs in the CMS.
-Re-uploading to a slot overwrites the same fixed path — consumers never change.
-
----
-
-## 6. Working on the site with Lovable
+## 7. Working on the site with Lovable
 
 1. Open the project in Lovable and prompt changes in chat. Lovable edits the code and
    syncs to the connected GitHub repo automatically.
@@ -168,9 +236,7 @@ bun run dev        # http://localhost:8080
 The Supabase credentials are hardcoded in `app-client.ts`, so no `.env` is required
 (`.env.example` documents the legacy env-var layout only).
 
----
-
-## 7. Common tasks cheat sheet
+## 8. Common tasks cheat sheet
 
 | I want to… | Where |
 |---|---|
