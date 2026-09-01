@@ -17,32 +17,38 @@ export type Database = {
       blog_posts: {
         Row: {
           author: string | null
+          author_id: string | null
           content: string
           cover_url: string | null
           created_at: string
           excerpt: string | null
           id: string
           published: boolean
+          status: string
           title: string
         }
         Insert: {
           author?: string | null
+          author_id?: string | null
           content: string
           cover_url?: string | null
           created_at?: string
           excerpt?: string | null
           id?: string
           published?: boolean
+          status?: string
           title: string
         }
         Update: {
           author?: string | null
+          author_id?: string | null
           content?: string
           cover_url?: string | null
           created_at?: string
           excerpt?: string | null
           id?: string
           published?: boolean
+          status?: string
           title?: string
         }
         Relationships: []
@@ -153,7 +159,6 @@ export type Database = {
           end_at: string | null
           event_name: string
           event_short_description: string | null
-          event_type: string
           id: string
           location: string | null
           location_type: string | null
@@ -166,7 +171,6 @@ export type Database = {
           end_at?: string | null
           event_name: string
           event_short_description?: string | null
-          event_type?: string
           id?: string
           location?: string | null
           location_type?: string | null
@@ -179,7 +183,6 @@ export type Database = {
           end_at?: string | null
           event_name?: string
           event_short_description?: string | null
-          event_type?: string
           id?: string
           location?: string | null
           location_type?: string | null
@@ -230,6 +233,84 @@ export type Database = {
           location?: string | null
           notes?: string | null
           preferred_time?: string | null
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          actual_testimonial: string
+          created_at: string
+          id: string
+          image_url: string | null
+          location: string | null
+          participant: string
+          quote: string | null
+          sort_order: number
+          tag: string | null
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          actual_testimonial: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          participant: string
+          quote?: string | null
+          sort_order?: number
+          tag?: string | null
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          actual_testimonial?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          participant?: string
+          quote?: string | null
+          sort_order?: number
+          tag?: string | null
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      trainers: {
+        Row: {
+          bio: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          location: string | null
+          name: string
+          sort_order: number
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          name: string
+          sort_order?: number
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          name?: string
+          sort_order?: number
+          updated_at?: string
+          visible?: boolean
         }
         Relationships: []
       }
