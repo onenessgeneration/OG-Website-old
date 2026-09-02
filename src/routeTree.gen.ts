@@ -27,9 +27,20 @@ import { Route as ContactUsRouteImport } from './routes/contact-us'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AllUpcomingSfzEventsRouteImport } from './routes/allUpcoming-sfz-events'
 import { Route as AllPastSfzEventsRouteImport } from './routes/allPast-sfz-events'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogSubmitRouteImport } from './routes/blog.submit'
+import { Route as BlogIdRouteImport } from './routes/blog.$id'
+import { Route as AdminTrainersRouteImport } from './routes/admin.trainers'
+import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
+import { Route as AdminSiteMediaRouteImport } from './routes/admin.site-media'
+import { Route as AdminGalleryRouteImport } from './routes/admin.gallery'
+import { Route as AdminEventsIndexRouteImport } from './routes/admin.events.index'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin.blog.index'
+import { Route as AdminEventsNewRouteImport } from './routes/admin.events.new'
+import { Route as AdminEventsIdRouteImport } from './routes/admin.events.$id'
 
 const WallpapersRoute = WallpapersRouteImport.update({
   id: '/wallpapers',
@@ -121,6 +132,11 @@ const AllPastSfzEventsRoute = AllPastSfzEventsRouteImport.update({
   path: '/allPast-sfz-events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -136,14 +152,65 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSubmitRoute = BlogSubmitRouteImport.update({
+  id: '/submit',
+  path: '/submit',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogIdRoute = BlogIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BlogRoute,
+} as any)
+const AdminTrainersRoute = AdminTrainersRouteImport.update({
+  id: '/trainers',
+  path: '/trainers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSiteMediaRoute = AdminSiteMediaRouteImport.update({
+  id: '/site-media',
+  path: '/site-media',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGalleryRoute = AdminGalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsIndexRoute = AdminEventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsNewRoute = AdminEventsNewRouteImport.update({
+  id: '/events/new',
+  path: '/events/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsIdRoute = AdminEventsIdRouteImport.update({
+  id: '/events/$id',
+  path: '/events/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
   '/allPast-sfz-events': typeof AllPastSfzEventsRoute
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contact-us': typeof ContactUsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
@@ -159,14 +226,25 @@ export interface FileRoutesByFullPath {
   '/soul-sync': typeof SoulSyncRoute
   '/summer-camp': typeof SummerCampRoute
   '/wallpapers': typeof WallpapersRoute
+  '/admin/gallery': typeof AdminGalleryRoute
+  '/admin/site-media': typeof AdminSiteMediaRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/admin/trainers': typeof AdminTrainersRoute
+  '/blog/$id': typeof BlogIdRoute
+  '/blog/submit': typeof BlogSubmitRoute
+  '/admin/events/$id': typeof AdminEventsIdRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/events/': typeof AdminEventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
   '/allPast-sfz-events': typeof AllPastSfzEventsRoute
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contact-us': typeof ContactUsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
@@ -182,15 +260,26 @@ export interface FileRoutesByTo {
   '/soul-sync': typeof SoulSyncRoute
   '/summer-camp': typeof SummerCampRoute
   '/wallpapers': typeof WallpapersRoute
+  '/admin/gallery': typeof AdminGalleryRoute
+  '/admin/site-media': typeof AdminSiteMediaRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/admin/trainers': typeof AdminTrainersRoute
+  '/blog/$id': typeof BlogIdRoute
+  '/blog/submit': typeof BlogSubmitRoute
+  '/admin/events/$id': typeof AdminEventsIdRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
+  '/admin/events': typeof AdminEventsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about-us': typeof AboutUsRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
   '/allPast-sfz-events': typeof AllPastSfzEventsRoute
   '/allUpcoming-sfz-events': typeof AllUpcomingSfzEventsRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contact-us': typeof ContactUsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
@@ -206,6 +295,16 @@ export interface FileRoutesById {
   '/soul-sync': typeof SoulSyncRoute
   '/summer-camp': typeof SummerCampRoute
   '/wallpapers': typeof WallpapersRoute
+  '/admin/gallery': typeof AdminGalleryRoute
+  '/admin/site-media': typeof AdminSiteMediaRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/admin/trainers': typeof AdminTrainersRoute
+  '/blog/$id': typeof BlogIdRoute
+  '/blog/submit': typeof BlogSubmitRoute
+  '/admin/events/$id': typeof AdminEventsIdRoute
+  '/admin/events/new': typeof AdminEventsNewRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/events/': typeof AdminEventsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -213,6 +312,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about-us'
     | '/account'
+    | '/admin'
     | '/allPast-sfz-events'
     | '/allUpcoming-sfz-events'
     | '/blog'
@@ -231,11 +331,22 @@ export interface FileRouteTypes {
     | '/soul-sync'
     | '/summer-camp'
     | '/wallpapers'
+    | '/admin/gallery'
+    | '/admin/site-media'
+    | '/admin/testimonials'
+    | '/admin/trainers'
+    | '/blog/$id'
+    | '/blog/submit'
+    | '/admin/events/$id'
+    | '/admin/events/new'
+    | '/admin/blog/'
+    | '/admin/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about-us'
     | '/account'
+    | '/admin'
     | '/allPast-sfz-events'
     | '/allUpcoming-sfz-events'
     | '/blog'
@@ -254,11 +365,22 @@ export interface FileRouteTypes {
     | '/soul-sync'
     | '/summer-camp'
     | '/wallpapers'
+    | '/admin/gallery'
+    | '/admin/site-media'
+    | '/admin/testimonials'
+    | '/admin/trainers'
+    | '/blog/$id'
+    | '/blog/submit'
+    | '/admin/events/$id'
+    | '/admin/events/new'
+    | '/admin/blog'
+    | '/admin/events'
   id:
     | '__root__'
     | '/'
     | '/about-us'
     | '/account'
+    | '/admin'
     | '/allPast-sfz-events'
     | '/allUpcoming-sfz-events'
     | '/blog'
@@ -277,15 +399,26 @@ export interface FileRouteTypes {
     | '/soul-sync'
     | '/summer-camp'
     | '/wallpapers'
+    | '/admin/gallery'
+    | '/admin/site-media'
+    | '/admin/testimonials'
+    | '/admin/trainers'
+    | '/blog/$id'
+    | '/blog/submit'
+    | '/admin/events/$id'
+    | '/admin/events/new'
+    | '/admin/blog/'
+    | '/admin/events/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutUsRoute: typeof AboutUsRoute
   AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AllPastSfzEventsRoute: typeof AllPastSfzEventsRoute
   AllUpcomingSfzEventsRoute: typeof AllUpcomingSfzEventsRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   ContactUsRoute: typeof ContactUsRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GalleryRoute: typeof GalleryRoute
@@ -431,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AllPastSfzEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account': {
       id: '/account'
       path: '/account'
@@ -452,16 +592,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/submit': {
+      id: '/blog/submit'
+      path: '/submit'
+      fullPath: '/blog/submit'
+      preLoaderRoute: typeof BlogSubmitRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/$id': {
+      id: '/blog/$id'
+      path: '/$id'
+      fullPath: '/blog/$id'
+      preLoaderRoute: typeof BlogIdRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/admin/trainers': {
+      id: '/admin/trainers'
+      path: '/trainers'
+      fullPath: '/admin/trainers'
+      preLoaderRoute: typeof AdminTrainersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/testimonials': {
+      id: '/admin/testimonials'
+      path: '/testimonials'
+      fullPath: '/admin/testimonials'
+      preLoaderRoute: typeof AdminTestimonialsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/site-media': {
+      id: '/admin/site-media'
+      path: '/site-media'
+      fullPath: '/admin/site-media'
+      preLoaderRoute: typeof AdminSiteMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/gallery': {
+      id: '/admin/gallery'
+      path: '/gallery'
+      fullPath: '/admin/gallery'
+      preLoaderRoute: typeof AdminGalleryRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events/': {
+      id: '/admin/events/'
+      path: '/events'
+      fullPath: '/admin/events/'
+      preLoaderRoute: typeof AdminEventsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/blog'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events/new': {
+      id: '/admin/events/new'
+      path: '/events/new'
+      fullPath: '/admin/events/new'
+      preLoaderRoute: typeof AdminEventsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events/$id': {
+      id: '/admin/events/$id'
+      path: '/events/$id'
+      fullPath: '/admin/events/$id'
+      preLoaderRoute: typeof AdminEventsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminGalleryRoute: typeof AdminGalleryRoute
+  AdminSiteMediaRoute: typeof AdminSiteMediaRoute
+  AdminTestimonialsRoute: typeof AdminTestimonialsRoute
+  AdminTrainersRoute: typeof AdminTrainersRoute
+  AdminEventsIdRoute: typeof AdminEventsIdRoute
+  AdminEventsNewRoute: typeof AdminEventsNewRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
+  AdminEventsIndexRoute: typeof AdminEventsIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminGalleryRoute: AdminGalleryRoute,
+  AdminSiteMediaRoute: AdminSiteMediaRoute,
+  AdminTestimonialsRoute: AdminTestimonialsRoute,
+  AdminTrainersRoute: AdminTrainersRoute,
+  AdminEventsIdRoute: AdminEventsIdRoute,
+  AdminEventsNewRoute: AdminEventsNewRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
+  AdminEventsIndexRoute: AdminEventsIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface BlogRouteChildren {
+  BlogIdRoute: typeof BlogIdRoute
+  BlogSubmitRoute: typeof BlogSubmitRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogIdRoute: BlogIdRoute,
+  BlogSubmitRoute: BlogSubmitRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutUsRoute: AboutUsRoute,
   AccountRoute: AccountRoute,
+  AdminRoute: AdminRouteWithChildren,
   AllPastSfzEventsRoute: AllPastSfzEventsRoute,
   AllUpcomingSfzEventsRoute: AllUpcomingSfzEventsRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   ContactUsRoute: ContactUsRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GalleryRoute: GalleryRoute,
