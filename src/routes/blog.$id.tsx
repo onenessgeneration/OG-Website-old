@@ -48,7 +48,7 @@ interface Post {
 }
 
 function BlogPostPage() {
-  const post = Route.useLoaderData();
+  const post = Route.useLoaderData() as Post | null;
   if (!post) return <BlogPostNotFound />;
 
   return (
