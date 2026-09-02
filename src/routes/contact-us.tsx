@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/app-client";
 import { toast } from "sonner";
+import { SiteImage } from "@/components/SiteMedia";
 
 export const Route = createFileRoute("/contact-us")({
   head: () => ({
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/contact-us")({
   component: ContactPage,
 });
 
-const CONTACT_IMG =
+const CONTACT_DEFAULT =
   "https://res.cloudinary.com/drxwnjtcn/image/upload/v1749203630/Oneness-Generation/Summer%20Camp%20Events/_DSC9402_hj84tx.jpg";
 
 function ContactPage() {
@@ -59,7 +60,7 @@ function ContactPage() {
       >
         <div className="lg:flex items-center lg:gap-10 lg:space-y-0 space-y-5">
           <div className="relative w-full lg:w-1/2 h-96 md:h-[410px] lg:block hidden">
-            <img src={CONTACT_IMG} alt="Contact Us" className="w-full h-full object-cover rounded-xl" />
+            <SiteImage path="contact/hero.jpg" defaultSrc={CONTACT_DEFAULT} alt="Contact Us" fallbackAspect="3/4" fallbackRounded="rounded-xl" className="w-full h-full object-cover rounded-xl" />
             {Overlay}
           </div>
 
@@ -103,7 +104,7 @@ function ContactPage() {
           </form>
 
           <div className="relative w-full lg:w-1/2 h-96 lg:hidden block">
-            <img src={CONTACT_IMG} alt="Contact Us" className="w-full h-full object-cover rounded-xl" />
+            <SiteImage path="contact/hero.jpg" defaultSrc={CONTACT_DEFAULT} alt="Contact Us" fallbackAspect="3/4" fallbackRounded="rounded-xl" className="w-full h-full object-cover rounded-xl" />
             {Overlay}
           </div>
         </div>

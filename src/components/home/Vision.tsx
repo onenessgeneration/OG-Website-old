@@ -1,7 +1,10 @@
 import visionImage from "@/assets/Home/Vision/vision.jpg";
 import arrowImage from "@/assets/Curvedarrowwithbrokenline.svg";
+import { SiteImage } from "@/components/SiteMedia";
 
 // Ported from oneness-frontend/src/Components/Home/Vision.jsx.
+// The main vision photo is now CMS-managed (slot `home-vision-image`); the
+// decorative arrow SVG stays as a shipped asset.
 export default function Vision() {
   return (
     <div className="md:flex items-center bg-[#605f4b] md:h-[70vh] justify-center">
@@ -25,9 +28,12 @@ export default function Vision() {
           </div>
 
           <div className="relative flex justify-end items-start md:w-1/3 mt-6 md:mt-0">
-            <img
-              src={visionImage}
+            <SiteImage
+              path="home/vision.jpg"
               alt="Vision"
+              defaultSrc={visionImage}
+              fallbackAspect="4/5"
+              fallbackRounded="rounded-3xl"
               className="w-full md:h-[360px] shadow-lg object-cover rounded-3xl"
             />
             <img

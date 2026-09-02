@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ClientOnly } from "@/components/ClientOnly";
-import { useAuthUser } from "@/hooks/useAuthUser";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { signOut } from "@/lib/auth";
 
 export const Route = createFileRoute("/account")({
@@ -28,7 +28,7 @@ function AccountPage() {
 }
 
 function AccountBody() {
-  const { user, loading } = useAuthUser();
+  const { user, isAdmin, loading } = useIsAdmin();
 
   if (loading) return <p className="text-darkGreyBrown/70">Loading…</p>;
 
@@ -52,9 +52,17 @@ function AccountBody() {
         <p className="text-sm text-darkGreyBrown/70">Signed in as</p>
         <p className="text-lg font-medium break-all">{user.email}</p>
       </div>
+      {isAdmin && (
+        <Link
+          to="/admin"
+          className="inline-block px-6 py-2 uppercase text-sm bg-brown text-white rounded-full hover:bg-darkGreyBrown transition"
+        >
+          Open admin
+        </Link>
+      )}
       <button
         onClick={() => void signOut()}
-        className="px-6 py-2 uppercase text-sm bg-darkGreyBrown text-tan rounded-full hover:bg-brown transition"
+        className="block px-6 py-2 uppercase text-sm bg-darkGreyBrown text-tan rounded-full hover:bg-brown transition"
       >
         Sign out
       </button>

@@ -8,6 +8,7 @@ import breakthroughImg from "@/assets/programs/events/breakthrough.jpg";
 import skyImg from "@/assets/programs/sky/Sky1.png";
 import youthImg from "@/assets/Home/Vision/IMG_2950.jpg";
 import { ClientOnly } from "@/components/ClientOnly";
+import { SiteImage } from "@/components/SiteMedia";
 
 const Slider = ((SliderModule as unknown) as { default?: typeof SliderModule }).default ?? SliderModule;
 
@@ -23,29 +24,33 @@ export const Route = createFileRoute("/programs")({
   component: ProgramsPage,
 });
 
-type Card = { imageUrl: string; title: string; description: string; to: string };
+type Card = { slotPath: string; defaultSrc: string; title: string; description: string; to: string };
 
 const cards: Card[] = [
   {
-    imageUrl: sfzImg,
+    slotPath: "programs/sfz.jpg",
+    defaultSrc: sfzImg,
     to: "/sfz",
     title: "Get trained in SFZ",
     description: "Become a beacon of calm and joy—lead the way to a stress-free life as an SFZ Trainer.",
   },
   {
-    imageUrl: skyImg,
+    slotPath: "programs/sky.jpg",
+    defaultSrc: skyImg,
     to: "/programs",
     title: "SKY (monthly)",
     description: "Learn the wisdom from Sri Krishnaji to transform every area of your life.",
   },
   {
-    imageUrl: breakthroughImg,
+    slotPath: "programs/breakthrough.jpg",
+    defaultSrc: breakthroughImg,
     to: "/programs",
     title: "Breakthrough",
     description: "Breakthrough the Limits - unlock your true potential and step into a life of limitless possibilities.",
   },
   {
-    imageUrl: youthImg,
+    slotPath: "programs/youth.jpg",
+    defaultSrc: youthImg,
     to: "/programs",
     title: "Oneness Youth Festival",
     description: "Unlock your Super Brain, Super Body, and Super Heart and experience a brand new state of being.",
@@ -74,9 +79,12 @@ function EventsSlider() {
         <Slider ref={(s) => { sliderRef.current = s; }} {...settings} className="px-6 py-6">
           {cards.map((c, i) => (
             <Link key={i} to={c.to} className="relative cursor-pointer rounded-xl block">
-              <img
-                src={c.imageUrl}
+              <SiteImage
+                path={c.slotPath}
+                defaultSrc={c.defaultSrc}
                 alt={c.title}
+                fallbackAspect="16/9"
+                fallbackRounded="rounded-2xl"
                 className="w-full md:h-[60vh] h-[40vh] object-cover rounded-2xl"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent rounded-2xl" />

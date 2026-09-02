@@ -1,7 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { GoPlay } from "react-icons/go";
+
 import { motion, useScroll, useTransform } from "framer-motion";
 import { createFileRoute } from "@tanstack/react-router";
-import { ImagePlaceholder, VideoPlaceholder } from "@/components/Placeholder";
+import { SiteImage, SiteVideo } from "@/components/SiteMedia";
 
 export const Route = createFileRoute("/soul-sync")({
   head: () => ({
@@ -68,7 +70,55 @@ const data: Pillar[] = [
   },
 ];
 
+function SoulSyncHero() {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [activated, setActivated] = useState(false);
+
+  const handlePlay = () => {
+    const v = videoRef.current;
+    if (v) {
+      v.muted = false;
+      v.volume = 0.75;
+      v.controls = true;
+      void v.play();
+    }
+    setActivated(true);
+  };
+
+  return (
+    <div className="relative w-full h-full">
+      <SiteVideo
+        ref={videoRef}
+        path="soul-sync/hero.mp4"
+        fallbackLabel="Soul Sync video"
+        fallbackAspect="16/9"
+        autoPlay
+        muted
+        loop
+        controls={false}
+        className="w-full h-full object-cover"
+      />
+      {!activated && (
+        <>
+          <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+          <button
+            onClick={handlePlay}
+            aria-label="Play with sound"
+            className="absolute inset-0 z-10 flex items-center justify-center text-white"
+          >
+            <span className="flex items-center gap-2 border border-white/80 rounded-full px-6 py-2 text-xl md:text-3xl backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white hover:text-black">
+              <span className="font-medium">Play</span>
+              <GoPlay className="text-2xl md:text-3xl" />
+            </span>
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
 function SoulSyncVideoAndCards() {
+
   const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: container,
@@ -93,13 +143,9 @@ function SoulSyncVideoAndCards() {
         style={{ scale, rotate }}
         className="w-full md:h-screen h-fit overflow-hidden sticky top-0"
       >
-        <VideoPlaceholder
-          label="Soul Sync video"
-          aspect="16/9"
-          rounded="rounded-none"
-          className="w-full h-full border-0"
-        />
+        <SoulSyncHero />
       </motion.div>
+
 
       <div className="relative min-h-screen bg-white md:pt-16 pt-8">
         <h1 className="md:text-5xl text-2xl font-bold text-center text-tanAccent mb-8 grid lg:flex lg:justify-center">
@@ -127,11 +173,13 @@ function SoulSyncVideoAndCards() {
                 </div>
                 <div className="relative md:w-1/2 h-full w-full rounded-3xl overflow-hidden">
                   <motion.div className="w-full h-full" style={{ scale: imageScale }}>
-                    <ImagePlaceholder
-                      label={item.title}
-                      aspect="auto"
-                      rounded="rounded-3xl"
-                      className="w-full h-full border-0"
+                    <SiteImage
+                      path={`soul-sync/pillars/${item.title.toLowerCase()}.jpg`}
+                      alt={item.title}
+                      fallbackLabel={item.title}
+                      fallbackAspect="auto"
+                      fallbackRounded="rounded-3xl"
+                      className="w-full h-full object-cover rounded-3xl"
                     />
                   </motion.div>
                 </div>
@@ -154,11 +202,13 @@ function SoulSyncVideoAndCards() {
                 <p className="text-tan mt-4">{item.text}</p>
               </div>
               <div className="mt-4">
-                <ImagePlaceholder
-                  label={item.title}
-                  aspect="4/3"
-                  rounded="rounded-3xl"
-                  className="w-full h-full border-0"
+                <SiteImage
+                  path={`soul-sync/pillars/${item.title.toLowerCase()}.jpg`}
+                  alt={item.title}
+                  fallbackLabel={item.title}
+                  fallbackAspect="4/3"
+                  fallbackRounded="rounded-3xl"
+                  className="w-full h-full object-cover rounded-3xl"
                 />
               </div>
             </div>
@@ -184,11 +234,13 @@ function Intro() {
   return (
     <div className="md:h-screen h-fit overflow-hidden">
       <div className="relative md:h-full h-fit w-full">
-        <ImagePlaceholder
-          label="Soul Sync intro"
-          aspect="16/9"
-          rounded="rounded-none"
-          className="w-full md:h-full h-auto border-0"
+        <SiteImage
+          path="soul-sync/intro.jpg"
+          alt="Soul Sync intro"
+          fallbackLabel="Soul Sync intro"
+          fallbackAspect="16/9"
+          fallbackRounded="rounded-none"
+          className="w-full md:h-full h-auto object-cover"
         />
       </div>
     </div>
@@ -220,12 +272,15 @@ function Section() {
       </div>
       <div className="fixed top-[-10vh] left-0 h-[120vh] w-full -z-0">
         <motion.div style={{ y }} className="relative w-full h-full">
-          <ImagePlaceholder
-            label=""
-            aspect="auto"
-            rounded="rounded-none"
-            className="w-full h-full border-0"
+          <SiteImage
+            path="soul-sync/parallax.jpg"
+            alt=""
+            fallbackLabel=""
+            fallbackAspect="auto"
+            fallbackRounded="rounded-none"
+            className="w-full h-full object-cover"
           />
+
 
         </motion.div>
       </div>

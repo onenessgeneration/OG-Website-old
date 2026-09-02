@@ -1,0 +1,1 @@
+ALTER TABLE public.sfz_events DROP COLUMN IF EXISTS event_type;

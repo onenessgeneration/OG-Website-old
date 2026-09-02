@@ -2,15 +2,15 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
+import {
+  APP_SUPABASE_URL,
+  APP_SUPABASE_PUBLISHABLE_KEY,
+} from "@/integrations/supabase/app-client";
 
 function serverSupabase() {
-  return createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY!,
-    {
-      auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-    },
-  );
+  return createClient<Database>(APP_SUPABASE_URL, APP_SUPABASE_PUBLISHABLE_KEY, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+  });
 }
 
 async function queryEvents(type: "upcoming" | "past", limit: number) {

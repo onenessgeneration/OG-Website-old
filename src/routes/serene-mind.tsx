@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import hero from "@/assets/serene-mind/hero.jpg.asset.json";
+import { SiteImage } from "@/components/SiteMedia";
+
+const SLOT_PATH = "serene-mind/hero.jpg";
 
 export const Route = createFileRoute("/serene-mind")({
   head: () => ({
@@ -33,7 +36,13 @@ function Intro() {
   return (
     <div ref={container} className="md:h-screen h-fit overflow-hidden">
       <motion.div style={{ y }} className="relative md:h-full h-fit w-full">
-        <img src={hero.url} alt="Serene Mind" className="top-0 left-0 w-full md:h-full h-fit object-cover" />
+        <SiteImage
+          path={SLOT_PATH}
+          defaultSrc={hero.url}
+          alt="Serene Mind"
+          fallbackAspect="3/4"
+          className="top-0 left-0 w-full md:h-full h-fit object-cover"
+        />
       </motion.div>
     </div>
   );
@@ -57,7 +66,13 @@ function Section() {
       </div>
       <div className="fixed top-[-10vh] left-0 h-[120vh] w-full">
         <motion.div style={{ y }} className="relative w-full h-full">
-          <img src={hero.url} alt="" style={{ objectFit: "cover" }} className="w-full h-full" />
+          <SiteImage
+            path={SLOT_PATH}
+            defaultSrc={hero.url}
+            alt=""
+            fallbackAspect="3/4"
+            className="w-full h-full object-cover"
+          />
         </motion.div>
       </div>
     </div>
