@@ -14,11 +14,12 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import { ImagePlaceholder } from "@/components/Placeholder";
+import { SiteImage } from "@/components/SiteMedia";
 import { getSfzEvents } from "@/lib/sfz.functions";
 import { EventCard, type SfzEvent } from "@/components/sfz/EventCard";
 import { SfzVideo } from "@/components/sfz/SfzVideo";
 import { ClientOnly } from "@/components/ClientOnly";
+import { fetchVisibleTrainers, type Trainer } from "@/lib/people";
 
 // react-slick ships as CJS; under Vite SSR the default may be wrapped.
 const Slider = ((SliderModule as unknown) as { default?: typeof SliderModule }).default ?? SliderModule;
@@ -43,11 +44,13 @@ function SFZBanner() {
       </h2>
       <div className="relative flex items-end justify-center mb-8">
         <div className="hidden sm:block w-[130px] h-[200px] bg-[#605F4B] rounded-l-lg" />
-        <ImagePlaceholder
-          label="SFZ Program"
-          aspect="16/9"
-          rounded="rounded-t-lg"
-          className="shadow-lg w-full md:h-[500px] h-[250px]"
+        <SiteImage
+          path="sfz/hero.jpg"
+          alt="SFZ Program"
+          fallbackLabel="SFZ Program"
+          fallbackAspect="16/9"
+          fallbackRounded="rounded-t-lg"
+          className="shadow-lg w-full md:h-[500px] h-[250px] object-cover rounded-t-lg"
         />
         <div className="hidden sm:block w-[130px] h-[200px] bg-[#605F4B] rounded-r-lg" />
       </div>
@@ -296,13 +299,11 @@ function Tools() {
   );
 }
 
-const trainerPlaceholders = [
-  { name: "Aditi Rao", location: "Mumbai, IN" },
-  { name: "Rahul Menon", location: "Bengaluru, IN" },
-  { name: "Sara Iyer", location: "Delhi, IN" },
-  { name: "Kabir Shah", location: "Pune, IN" },
-  { name: "Meera Nair", location: "Chennai, IN" },
-  { name: "Arjun Verma", location: "Hyderabad, IN" },
+const fallbackTrainers: Trainer[] = [
+  { id: "f1", name: "Aditi Rao", location: "Mumbai, IN", image_url: null, bio: null, visible: true, sort_order: 0, created_at: "", updated_at: "" },
+  { id: "f2", name: "Rahul Menon", location: "Bengaluru, IN", image_url: null, bio: null, visible: true, sort_order: 0, created_at: "", updated_at: "" },
+  { id: "f3", name: "Sara Iyer", location: "Delhi, IN", image_url: null, bio: null, visible: true, sort_order: 0, created_at: "", updated_at: "" },
+  { id: "f4", name: "Kabir Shah", location: "Pune, IN", image_url: null, bio: null, visible: true, sort_order: 0, created_at: "", updated_at: "" },
 ];
 
 function NextArrow({ onClick }: { onClick?: () => void }) {
@@ -331,19 +332,37 @@ function PrevArrow({ onClick }: { onClick?: () => void }) {
 }
 
 function OurTeam() {
+  const [trainers, setTrainers] = useState<Trainer[] | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetchVisibleTrainers()
+      .then((data) => {
+        if (alive) setTrainers(data);
+      })
+      .catch(() => {
+        if (alive) setTrainers([]);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const display = trainers === null ? fallbackTrainers : trainers.length === 0 ? fallbackTrainers : trainers;
+
   const settings = {
-    infinite: trainerPlaceholders.length > 4,
+    infinite: display.length > 4,
     speed: 500,
     dots: false,
-    slidesToShow: 4,
+    slidesToShow: Math.min(4, display.length),
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: display.length > 1,
     autoplaySpeed: 3000,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 1024, settings: { slidesToShow: Math.min(3, display.length) } },
+      { breakpoint: 768, settings: { slidesToShow: Math.min(2, display.length) } },
       { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
@@ -353,37 +372,44 @@ function OurTeam() {
       <div className="flex items-center justify-between py-10">
         <div className="w-1" />
         <h2 className="text-center md:text-4xl text-2xl font-bold text-tanAccent">Our Team</h2>
-        <a
-          href="/trainer"
-          className="bg-brown text-white md:px-6 px-3 py-2 rounded-full hover:bg-yellow-800"
-        >
-          See All
-        </a>
+        <div className="w-1" />
       </div>
 
       <div className="mt-6 relative">
         <ClientOnly fallback={<div className="h-64" />}>
           <Slider {...settings}>
-            {trainerPlaceholders.map((trainer, idx) => (
-              <div key={trainer.name} className="px-4">
+            {display.map((trainer, idx) => (
+              <div key={trainer.id} className="px-4">
                 <div
                   className={`flex flex-col items-center text-center transition-all duration-300 ${
                     idx % 2 === 0 ? "mt-12" : "mb-12"
                   }`}
                 >
                   <div className="w-48 h-48 rounded-full overflow-hidden shadow-md bg-secondary">
-                    <ImagePlaceholder
-                      label=""
-                      aspect="1/1"
-                      rounded="rounded-full"
-                      className="w-full h-full"
-                    />
+                    {trainer.image_url ? (
+                      <img
+                        src={trainer.image_url}
+                        alt={trainer.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-tan flex items-center justify-center text-brown text-3xl font-semibold">
+                        {trainer.name
+                          .split(" ")
+                          .map((s) => s[0])
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase()}
+                      </div>
+                    )}
                   </div>
                   <h3 className="mt-4 font-semibold">{trainer.name}</h3>
-                  <p className="text-gray-500 flex items-center justify-center text-sm mt-1">
-                    <MapPin className="mr-1 w-4 h-4 text-gray-400" />
-                    {trainer.location}
-                  </p>
+                  {trainer.location && (
+                    <p className="text-gray-500 flex items-center justify-center text-sm mt-1">
+                      <MapPin className="mr-1 w-4 h-4 text-gray-400" />
+                      {trainer.location}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

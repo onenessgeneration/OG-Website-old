@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Calendar, Clock } from "lucide-react";
+import { SiteImage } from "@/components/SiteMedia";
 
 export const Route = createFileRoute("/summer-camp")({
   head: () => ({
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/summer-camp")({
   component: SummerCampPage,
 });
 
-const BANNER_IMG =
+const BANNER_DEFAULT =
   "https://res.cloudinary.com/drxwnjtcn/image/upload/v1749203630/Oneness-Generation/Summer%20Camp%20Events/_DSC9402_hj84tx.jpg";
 
 function SummerCampPage() {
@@ -23,7 +24,13 @@ function SummerCampPage() {
     <>
       {/* Camp banner */}
       <div className="relative w-full h-[40vh] sm:h-[70vh] md:h-[83vh]">
-        <img src={BANNER_IMG} alt="Summer Camp Banner" className="w-full h-full object-cover" />
+        <SiteImage
+          path="summer-camp/banner.jpg"
+          defaultSrc={BANNER_DEFAULT}
+          alt="Summer Camp Banner"
+          fallbackAspect="16/9"
+          className="w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-white text-2xl sm:text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">

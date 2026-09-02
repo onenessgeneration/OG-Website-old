@@ -6,4 +6,15 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig();
+// Deployment target is controlled by DEPLOY_TARGET env var so the Lovable
+// editor keeps its default Cloudflare build while Vercel deploys override it.
+// Set DEPLOY_TARGET=vercel in Vercel's Environment Variables (all envs).
+const deployTarget = process.env.DEPLOY_TARGET;
+
+export default defineConfig(
+  deployTarget === "vercel"
+    ? { nitro: { preset: "vercel" } }
+    : deployTarget === "node"
+    ? { nitro: { preset: "node-server" } }
+    : {},
+);

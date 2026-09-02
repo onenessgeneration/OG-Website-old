@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import logoUrl from "@/assets/logo.png";
+const logoUrl = "/logo.png";
 import { MobileMenu } from "./MobileMenu";
 import { ClientOnly } from "./ClientOnly";
 import { useAuthUser } from "@/hooks/useAuthUser";
@@ -152,7 +152,7 @@ function AuthAffordance() {
       <button className="md:px-6 px-4 uppercase text-[14px] md:py-[6px] py-[4px] bg-brown text-white rounded-full hover:bg-darkGreyBrown transition duration-300 max-w-[180px] truncate">
         {label}
       </button>
-      <ul className="absolute right-0 z-50 mt-1 xl:text-lg text-sm bg-white rounded-md shadow-lg text-brown hidden group-hover:block w-48">
+      <ul className="absolute right-0 z-50 top-full xl:text-lg text-sm bg-white rounded-md shadow-lg text-brown hidden group-hover:block w-48">
         <li>
           <Link to="/account" className="block px-4 py-2 rounded-t-md">
             My Account

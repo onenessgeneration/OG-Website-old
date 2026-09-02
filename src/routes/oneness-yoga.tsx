@@ -8,6 +8,9 @@ import three from "@/assets/oneness-yoga/meditation.png.asset.json";
 import four from "@/assets/oneness-yoga/yoga-pose.png.asset.json";
 import five from "@/assets/oneness-yoga/yoga-pose2.png.asset.json";
 import six from "@/assets/oneness-yoga/yoga-position.png.asset.json";
+import { SiteImage } from "@/components/SiteMedia";
+
+const HERO_PATH = "oneness-yoga/hero.jpg";
 
 export const Route = createFileRoute("/oneness-yoga")({
   head: () => ({
@@ -39,7 +42,13 @@ function Intro() {
   return (
     <div ref={container} className="md:h-screen h-fit overflow-hidden">
       <motion.div style={{ y }} className="relative md:h-full h-fit w-full">
-        <img src={bgAsset.url} alt="Oneness Yoga" className="top-0 left-0 w-full md:h-full h-fit object-cover" />
+        <SiteImage
+          path={HERO_PATH}
+          defaultSrc={bgAsset.url}
+          alt="Oneness Yoga"
+          fallbackAspect="3/4"
+          className="top-0 left-0 w-full md:h-full h-fit object-cover"
+        />
       </motion.div>
     </div>
   );
@@ -63,20 +72,27 @@ function Section() {
       </div>
       <div className="fixed top-[-10vh] left-0 h-[120vh] w-full">
         <motion.div style={{ y }} className="relative w-full h-full">
-          <img src={bgAsset.url} alt="" style={{ objectFit: "cover" }} className="w-full h-full" />
+          <SiteImage
+            path={HERO_PATH}
+            defaultSrc={bgAsset.url}
+            alt=""
+            fallbackAspect="3/4"
+            className="w-full h-full object-cover"
+          />
         </motion.div>
       </div>
     </div>
   );
 }
 
-const items: { icon: string; text: string }[] = [
-  { icon: one.url, text: "Build strength & stability: Feel more grounded on your mat and in life." },
-  { icon: two.url, text: "Boost energy: Bring vitality into every move and every day." },
-  { icon: three.url, text: "Release stress: Melt away tension and invite relaxation." },
-  { icon: four.url, text: "Embrace love & care: Cultivate love and care for your body." },
-  { icon: five.url, text: "Stay mindful: Experience awareness through movement and stillness." },
-  { icon: six.url, text: "Live in oneness: Connect deeply with your body, consciousness, and everything around you." },
+type IconItem = { slotPath: string; defaultSrc: string; text: string };
+const items: IconItem[] = [
+  { slotPath: "oneness-yoga/icons/corpse.png", defaultSrc: one.url, text: "Build strength & stability: Feel more grounded on your mat and in life." },
+  { slotPath: "oneness-yoga/icons/exercise.png", defaultSrc: two.url, text: "Boost energy: Bring vitality into every move and every day." },
+  { slotPath: "oneness-yoga/icons/meditation.png", defaultSrc: three.url, text: "Release stress: Melt away tension and invite relaxation." },
+  { slotPath: "oneness-yoga/icons/yoga-pose.png", defaultSrc: four.url, text: "Embrace love & care: Cultivate love and care for your body." },
+  { slotPath: "oneness-yoga/icons/yoga-pose2.png", defaultSrc: five.url, text: "Stay mindful: Experience awareness through movement and stillness." },
+  { slotPath: "oneness-yoga/icons/yoga-position.png", defaultSrc: six.url, text: "Live in oneness: Connect deeply with your body, consciousness, and everything around you." },
 ];
 
 function Description() {
@@ -102,7 +118,13 @@ function Description() {
         <ul className="space-y-2 pt-4">
           {items.map((it, i) => (
             <li key={i} className="flex items-center gap-5 border md:w-1/2 w-full p-2">
-              <img src={it.icon} alt="" className="size-24 border p-2" />
+              <SiteImage
+                path={it.slotPath}
+                defaultSrc={it.defaultSrc}
+                alt=""
+                fallbackAspect="1/1"
+                className="size-24 border p-2 object-contain"
+              />
               <span className="md:text-xl text-sm leading-loose">{it.text}</span>
             </li>
           ))}

@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
 
+
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -35,13 +36,15 @@ export const Route = createRootRoute({
       { name: "twitter:title", content: "Oneness Generation — Empowering Youth Towards Stress-Free Living" },
       { property: "og:description", content: "A community of young people moving towards Oneness — meditation, yoga, and stress-free living." },
       { name: "twitter:description", content: "A community of young people moving towards Oneness — meditation, yoga, and stress-free living." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9068e2a1-e7f2-426b-8c0b-93dee39865f3/id-preview-e5a6f97b--7ac6a076-c73a-4126-bfbe-effd0301d261.lovable.app-1777120688438.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9068e2a1-e7f2-426b-8c0b-93dee39865f3/id-preview-e5a6f97b--7ac6a076-c73a-4126-bfbe-effd0301d261.lovable.app-1777120688438.png" },
+      { property: "og:image", content: "https://oneness-next-gen.lovable.app/logo.png" },
+      { name: "twitter:image", content: "https://oneness-next-gen.lovable.app/logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/logo.png" },
+      { rel: "apple-touch-icon", href: "/logo.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" },

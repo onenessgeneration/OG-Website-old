@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/app-client";
 import { toast } from "sonner";
+import { SiteImage } from "@/components/SiteMedia";
 
 export const Route = createFileRoute("/get-involved")({
   head: () => ({
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/get-involved")({
   component: GetInvolvedPage,
 });
 
-const VOLUNTEER_IMG =
+const VOLUNTEER_DEFAULT =
   "https://res.cloudinary.com/drxwnjtcn/image/upload/v1749203630/Oneness-Generation/Summer%20Camp%20Events/_DSC9402_hj84tx.jpg";
 
 const communities: Array<{ name: string; url: string }> = [
@@ -64,9 +65,12 @@ function GetInvolvedPage() {
         </h2>
         <div className="md:flex justify-center items-center gap-10 md:space-y-0 space-y-5">
           <div className="md:w-1/2">
-            <img
-              src={VOLUNTEER_IMG}
+            <SiteImage
+              path="get-involved/hero.jpg"
+              defaultSrc={VOLUNTEER_DEFAULT}
               alt="Volunteer"
+              fallbackAspect="4/3"
+              fallbackRounded="rounded-xl"
               className="w-full h-auto max-h-[450px] object-cover rounded-xl shadow-lg"
             />
           </div>

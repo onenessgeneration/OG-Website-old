@@ -1,6 +1,11 @@
 import event from "@/assets/Home/Vision/DSC05413.jpg";
+import { siteMediaUrl } from "@/lib/siteMedia";
+import { SiteImage } from "@/components/SiteMedia";
 
-// Ported from oneness-frontend/src/Components/Home/UpcomingEventCard.jsx.
+// Background photo for the "What's new?" strip. CMS-managed via slot
+// `home-upcoming-event-bg`; falls back to the shipped asset.
+const CMS_BG_URL = siteMediaUrl("home/upcoming-event-bg.jpg");
+
 export default function UpcomingEventCard() {
   return (
     <section className="md:mt-12 mt-6">
@@ -11,7 +16,7 @@ export default function UpcomingEventCard() {
       {/* Desktop */}
       <div
         className="md:flex hidden items-center bg-tan xl:h-[70vh] lg:h-[50vh] h-[50vh] justify-center bg-no-repeat bg-cover bg-center"
-        style={{ backgroundImage: `url(${event})` }}
+        style={{ backgroundImage: `url(${CMS_BG_URL}), url(${event})` }}
       >
         <div className="flex xl:justify-end justify-center w-full container mx-auto px-5 p-5 md:p-0">
           <div className="w-[500px] p-4 h-[400px] grid place-content-center content-center bg-gradient-to-t from-[#f5cf9d] to-tan rounded-tl-[80px] rounded-br-[80px]">
@@ -55,7 +60,13 @@ export default function UpcomingEventCard() {
           </div>
         </div>
         <div className="w-full md:hidden">
-          <img src={event} alt="Event" className="w-full h-[300px] object-cover" />
+          <SiteImage
+            path="home/upcoming-event-bg.jpg"
+            defaultSrc={event}
+            alt="Event"
+            fallbackAspect="16/9"
+            className="w-full h-[300px] object-cover"
+          />
         </div>
       </div>
     </section>
