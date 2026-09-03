@@ -315,3 +315,175 @@ DROP POLICY IF EXISTS "event-media admin delete" ON storage.objects;
 CREATE POLICY "event-media admin delete" ON storage.objects
   FOR DELETE TO authenticated
   USING (bucket_id = 'event-media' AND public.has_role(auth.uid(), 'admin'));
+
+-- =====================================================================
+-- PART 2 — additions to bring an older database up to the current app
+-- (all statements are idempotent and safe to re-run)
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- profiles: updated_at + trigger
+-- ---------------------------------------------------------------------
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+DROP TRIGGER IF EXISTS trg_profiles_updated_at ON public.profiles;
+CREATE TRIGGER trg_profiles_updated_at
+  BEFORE UPDATE ON public.profiles
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+-- ---------------------------------------------------------------------
+-- blog_posts: moderation flow (author submits, admin approves)
+-- ---------------------------------------------------------------------
+ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS author_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'pending';
+ALTER TABLE public.blog_posts ALTER COLUMN published SET DEFAULT false;
+
+DROP POLICY IF EXISTS "blog_posts author select" ON public.blog_posts;
+CREATE POLICY "blog_posts author select" ON public.blog_posts
+  FOR SELECT TO authenticated USING (author_id = auth.uid());
+DROP POLICY IF EXISTS "blog_posts author insert" ON public.blog_posts;
+CREATE POLICY "blog_posts author insert" ON public.blog_posts
+  FOR INSERT TO authenticated
+  WITH CHECK (author_id = auth.uid() AND published = false AND status = 'pending');
+
+-- ---------------------------------------------------------------------
+-- newsletter_signups: columns the form actually submits
+-- ---------------------------------------------------------------------
+ALTER TABLE public.newsletter_signups ADD COLUMN IF NOT EXISTS country TEXT;
+ALTER TABLE public.newsletter_signups ADD COLUMN IF NOT EXISTS agreed BOOLEAN NOT NULL DEFAULT false;
+
+-- ---------------------------------------------------------------------
+-- sfz_session_requests: align columns with the request form
+-- ---------------------------------------------------------------------
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS group_name TEXT;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS contact_name TEXT;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS contact_phone TEXT;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS contact_email TEXT;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS group_size INTEGER;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS date_requested DATE;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS attendance_type TEXT;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS location TEXT;
+ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS notes TEXT;
+
+-- obsolete columns must not block inserts
+ALTER TABLE public.sfz_session_requests ALTER COLUMN full_name DROP NOT NULL;
+ALTER TABLE public.sfz_session_requests ALTER COLUMN email     DROP NOT NULL;
+ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS full_name;
+ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS email;
+ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS phone;
+ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS preferred_date;
+ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS session_type;
+ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS message;
+
+-- ---------------------------------------------------------------------
+-- testimonials
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.testimonials (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  participant TEXT NOT NULL,
+  location TEXT,
+  tag TEXT DEFAULT 'Testimonial',
+  actual_testimonial TEXT NOT NULL,
+  quote TEXT,
+  image_url TEXT,
+  visible BOOLEAN NOT NULL DEFAULT true,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+GRANT SELECT ON public.testimonials TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.testimonials TO authenticated;
+GRANT ALL ON public.testimonials TO service_role;
+ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
+CREATE INDEX IF NOT EXISTS testimonials_sort_idx ON public.testimonials (sort_order, created_at);
+
+DROP TRIGGER IF EXISTS testimonials_set_updated_at ON public.testimonials;
+CREATE TRIGGER testimonials_set_updated_at
+  BEFORE UPDATE ON public.testimonials
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP POLICY IF EXISTS "Public can view visible testimonials" ON public.testimonials;
+CREATE POLICY "Public can view visible testimonials" ON public.testimonials FOR SELECT USING (visible = true);
+DROP POLICY IF EXISTS "Admins can view all testimonials" ON public.testimonials;
+CREATE POLICY "Admins can view all testimonials" ON public.testimonials FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can insert testimonials" ON public.testimonials;
+CREATE POLICY "Admins can insert testimonials" ON public.testimonials FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can update testimonials" ON public.testimonials;
+CREATE POLICY "Admins can update testimonials" ON public.testimonials FOR UPDATE TO authenticated USING (public.has_role(auth.uid(), 'admin')) WITH CHECK (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can delete testimonials" ON public.testimonials;
+CREATE POLICY "Admins can delete testimonials" ON public.testimonials FOR DELETE TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+
+-- ---------------------------------------------------------------------
+-- trainers
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.trainers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  location TEXT,
+  image_url TEXT,
+  bio TEXT,
+  visible BOOLEAN NOT NULL DEFAULT true,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+GRANT SELECT ON public.trainers TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.trainers TO authenticated;
+GRANT ALL ON public.trainers TO service_role;
+ALTER TABLE public.trainers ENABLE ROW LEVEL SECURITY;
+CREATE INDEX IF NOT EXISTS trainers_sort_idx ON public.trainers (sort_order, created_at);
+
+DROP TRIGGER IF EXISTS trainers_set_updated_at ON public.trainers;
+CREATE TRIGGER trainers_set_updated_at
+  BEFORE UPDATE ON public.trainers
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+DROP POLICY IF EXISTS "Public can view visible trainers" ON public.trainers;
+CREATE POLICY "Public can view visible trainers" ON public.trainers FOR SELECT USING (visible = true);
+DROP POLICY IF EXISTS "Admins can view all trainers" ON public.trainers;
+CREATE POLICY "Admins can view all trainers" ON public.trainers FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can insert trainers" ON public.trainers;
+CREATE POLICY "Admins can insert trainers" ON public.trainers FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can update trainers" ON public.trainers;
+CREATE POLICY "Admins can update trainers" ON public.trainers FOR UPDATE TO authenticated USING (public.has_role(auth.uid(), 'admin')) WITH CHECK (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can delete trainers" ON public.trainers;
+CREATE POLICY "Admins can delete trainers" ON public.trainers FOR DELETE TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+
+-- ---------------------------------------------------------------------
+-- Storage: site-media, blog-media, gallery buckets
+-- ---------------------------------------------------------------------
+INSERT INTO storage.buckets (id, name, public) VALUES
+  ('site-media', 'site-media', true),
+  ('blog-media', 'blog-media', true),
+  ('gallery',    'gallery',    true)
+ON CONFLICT (id) DO UPDATE SET public = EXCLUDED.public;
+
+DO $$
+DECLARE b TEXT;
+BEGIN
+  FOREACH b IN ARRAY ARRAY['site-media','blog-media','gallery'] LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON storage.objects', b || ' public read');
+    EXECUTE format(
+      'CREATE POLICY %I ON storage.objects FOR SELECT USING (bucket_id = %L)',
+      b || ' public read', b);
+
+    EXECUTE format('DROP POLICY IF EXISTS %I ON storage.objects', b || ' admin insert');
+    EXECUTE format(
+      'CREATE POLICY %I ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = %L AND public.has_role(auth.uid(), ''admin''))',
+      b || ' admin insert', b);
+
+    EXECUTE format('DROP POLICY IF EXISTS %I ON storage.objects', b || ' admin update');
+    EXECUTE format(
+      'CREATE POLICY %I ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = %L AND public.has_role(auth.uid(), ''admin''))',
+      b || ' admin update', b);
+
+    EXECUTE format('DROP POLICY IF EXISTS %I ON storage.objects', b || ' admin delete');
+    EXECUTE format(
+      'CREATE POLICY %I ON storage.objects FOR DELETE TO authenticated USING (bucket_id = %L AND public.has_role(auth.uid(), ''admin''))',
+      b || ' admin delete', b);
+  END LOOP;
+END $$;
+
+-- Let admins list buckets (needed by "select from database" in /admin/site-media)
+DROP POLICY IF EXISTS "Admins can list buckets" ON storage.buckets;
+CREATE POLICY "Admins can list buckets" ON storage.buckets
+  FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
