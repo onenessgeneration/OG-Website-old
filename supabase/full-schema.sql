@@ -365,8 +365,6 @@ ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS location TEXT;
 ALTER TABLE public.sfz_session_requests ADD COLUMN IF NOT EXISTS notes TEXT;
 
 -- obsolete columns must not block inserts
-ALTER TABLE public.sfz_session_requests ALTER COLUMN full_name DROP NOT NULL;
-ALTER TABLE public.sfz_session_requests ALTER COLUMN email     DROP NOT NULL;
 ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS full_name;
 ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS email;
 ALTER TABLE public.sfz_session_requests DROP COLUMN IF EXISTS phone;
