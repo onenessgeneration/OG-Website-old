@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/app-client";
 
 const BUCKET = "site-media";
-const BASE = `https://rdpczbrtlabqpmwwwcgo.supabase.co/storage/v1/object/public/${BUCKET}`;
+const BASE = `https://dpqmjmifmndicuruviaz.supabase.co/storage/v1/object/public/${BUCKET}`;
 
 /**
  * The Supabase free tier caps a single upload at 50 MB. We surface this in the
