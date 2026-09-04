@@ -55,8 +55,8 @@ export const submitSfzRequest = createServerFn({ method: "POST" })
   .inputValidator((input) => requestSchema.parse(input))
   .handler(async ({ data }) => {
     const supabase = createClient<Database>(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PUBLISHABLE_KEY!,
+      APP_SUPABASE_URL,
+      APP_SUPABASE_PUBLISHABLE_KEY,
       { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
     );
     const { error } = await supabase.from("sfz_session_requests").insert({
