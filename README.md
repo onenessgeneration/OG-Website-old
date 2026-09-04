@@ -123,7 +123,7 @@ The app is wired to the project's **own** Supabase instance, **not** Lovable Clo
   **hardcoded** project URL and publishable (anon) key:
 
   ```
-  URL: https://rdpczbrtlabqpmwwwcgo.supabase.co
+  URL: https://dpqmjmifmndicuruviaz.supabase.co
   Key: sb_publishable_...  (publishable/anon key — safe for the browser)
   ```
 
