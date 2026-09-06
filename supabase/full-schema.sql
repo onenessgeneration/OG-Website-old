@@ -346,6 +346,15 @@ CREATE POLICY "blog_posts author insert" ON public.blog_posts
   WITH CHECK (author_id = auth.uid() AND published = false AND status = 'pending');
 
 -- ---------------------------------------------------------------------
+-- gallery_items: fields the gallery CMS writes
+-- ---------------------------------------------------------------------
+ALTER TABLE public.gallery_items ADD COLUMN IF NOT EXISTS storage_path TEXT;
+ALTER TABLE public.gallery_items ADD COLUMN IF NOT EXISTS visible BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE public.gallery_items ADD COLUMN IF NOT EXISTS sort_order INTEGER NOT NULL DEFAULT 0;
+CREATE INDEX IF NOT EXISTS gallery_items_sort_idx ON public.gallery_items (sort_order, created_at DESC);
+
+
+-- ---------------------------------------------------------------------
 -- newsletter_signups: columns the form actually submits
 -- ---------------------------------------------------------------------
 ALTER TABLE public.newsletter_signups ADD COLUMN IF NOT EXISTS country TEXT;
